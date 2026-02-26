@@ -2,8 +2,8 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HomeAssistant-Nova 2.1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>RAVIS-冰箱助手</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -14,29 +14,43 @@
     <div class="nova-app">
       <header class="hero-head">
         <div>
-          <h1>HomeAssistant-Nova 2.1</h1>
-          <p>图标化操作 + 弹出式编辑卡片，减少界面噪音，专注“先处理临期食材”。</p>
+          <h1 id="appTitle">RAVIS-冰箱助手</h1>
+          <p id="appSubtitle">图标化操作 + 弹出式编辑卡片，减少界面噪音，专注“先处理临期食材”。</p>
         </div>
-        <div id="globalKpi" class="kpi-strip" aria-live="polite"></div>
+        <div class="hero-tools">
+          <div id="globalKpi" class="kpi-strip" aria-live="polite"></div>
+          <div class="locale-switch-wrap">
+            <label id="localeLabel" for="localeSwitcher">语言</label>
+            <select id="localeSwitcher" aria-label="切换语言">
+              <option value="zh">简体中文</option>
+              <option value="en">English</option>
+              <option value="ja">日本語</option>
+              <option value="de">Deutsch</option>
+              <option value="fr">Français</option>
+              <option value="es">Español</option>
+              <option value="it">Italiano</option>
+            </select>
+          </div>
+        </div>
       </header>
 
       <main id="mainContent" class="layout">
         <aside class="panel left-panel" aria-label="Fridge fleet and routine">
           <section class="panel-section">
             <div class="section-head-row">
-              <h2>冰箱舰队</h2>
+              <h2 id="fleetTitle">我的冰箱</h2>
               <div class="op-inline">
                 <button id="openCreateFridgeModalBtn" type="button" class="op-btn" aria-label="新增冰箱">
                   <span class="op-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24"><path d="M7 2a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3H7Zm0 2h10a1 1 0 0 1 1 1v6H6V5a1 1 0 0 1 1-1Zm-1 9h12v6a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-6Zm6-9a1 1 0 0 0-1 1v2H9a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0V9h2a1 1 0 1 0 0-2h-2V5a1 1 0 0 0-1-1Z"/></svg>
                   </span>
-                  <span>新增</span>
+                  <span id="openCreateFridgeLabel">新增</span>
                 </button>
                 <button id="openEditFridgeModalBtn" type="button" class="op-btn" aria-label="编辑当前冰箱">
                   <span class="op-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24"><path d="M15.73 3.15a3 3 0 0 1 4.24 4.24l-9.7 9.7a1 1 0 0 1-.45.26l-4 1a1 1 0 0 1-1.21-1.21l1-4a1 1 0 0 1 .26-.45l9.86-9.54ZM6.1 14.6l-.54 2.15 2.15-.54 8.9-8.9-1.6-1.6-8.9 8.9Z"/></svg>
                   </span>
-                  <span>编辑</span>
+                  <span id="openEditFridgeLabel">编辑</span>
                 </button>
               </div>
             </div>
@@ -44,25 +58,25 @@
           </section>
 
           <section class="panel-section">
-            <h3>每日巡检</h3>
+            <h3 id="auditTitle">每日检查</h3>
             <div id="auditCard" class="audit-card"></div>
-            <button id="completeAuditBtn" type="button" class="btn btn-secondary">完成今日巡检</button>
+            <button id="completeAuditBtn" type="button" class="btn btn-secondary">完成今日检查</button>
           </section>
         </aside>
 
         <section class="center-col">
           <section class="panel panel-section risk-panel">
-            <h2>新鲜度指挥台</h2>
+            <h2 id="riskTitle">保鲜概览</h2>
             <div id="riskOverview" class="risk-grid"></div>
           </section>
 
           <section class="panel panel-section fridge-visual-panel">
             <div class="panel-head">
               <div>
-                <h2 id="fridgeTitle">视觉冰箱</h2>
+                <h2 id="fridgeTitle">我的冰箱</h2>
                 <p id="fridgeSubtitle">选择分区，优先处理即将过期食材。</p>
               </div>
-              <button id="toggleDoorBtn" type="button" class="btn btn-secondary">关门模式</button>
+              <button id="toggleDoorBtn" type="button" class="btn btn-secondary">关闭冰箱门</button>
             </div>
 
             <div class="fridge-stage">
@@ -79,11 +93,11 @@
 
           <div class="center-bottom">
             <section class="panel panel-section">
-              <h2>48小时救援清单</h2>
+              <h2 id="rescueTitle">近期优先食材</h2>
               <div id="rescueList" class="rescue-list"></div>
             </section>
             <section class="panel panel-section">
-              <h2>救援料理建议</h2>
+              <h2 id="ideasTitle">用餐建议</h2>
               <div id="ideaList" class="idea-list"></div>
             </section>
           </div>
@@ -91,45 +105,59 @@
 
         <aside class="panel right-panel" aria-label="Execution panel">
           <section class="panel-section">
-            <h2>操作中心</h2>
+            <h2 id="quickActionsTitle">快捷操作</h2>
             <div class="operation-grid">
               <button id="openCreateZoneModalBtn" type="button" class="op-btn op-btn-large" aria-label="新增分区">
                 <span class="op-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24"><path d="M3 6a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6Zm2 0v4a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1Zm8 0a3 3 0 0 1 3-3h2a1 1 0 1 1 0 2h-2a1 1 0 0 0-1 1v2a1 1 0 1 1-2 0V6Zm8 9a1 1 0 0 1-1 1h-2v2a1 1 0 1 1-2 0v-2h-2a1 1 0 1 1 0-2h2v-2a1 1 0 1 1 2 0v2h2a1 1 0 0 1 1 1ZM3 16a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v2a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-2Zm2 0v2a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1Z"/></svg>
                 </span>
-                <span>新增分区</span>
+                <span id="openCreateZoneLabel">新增分区</span>
               </button>
 
               <button id="openEditZoneModalBtn" type="button" class="op-btn op-btn-large" aria-label="编辑当前分区">
                 <span class="op-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24"><path d="M4 5a3 3 0 0 1 3-3h7a1 1 0 1 1 0 2H7a1 1 0 0 0-1 1v3h3a1 1 0 1 1 0 2H6v3h3a1 1 0 1 1 0 2H6v4a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-7a1 1 0 1 1 2 0v7a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V5Zm11.32 1.9a3 3 0 0 1 4.24 0l.54.54a3 3 0 0 1 0 4.24l-4.68 4.68a1 1 0 0 1-.45.26l-2.46.62a1 1 0 0 1-1.21-1.21l.62-2.46a1 1 0 0 1 .26-.45l4.68-4.68Zm2.83 1.41a1 1 0 0 0-1.42 0l-4.48 4.48-.31 1.24 1.24-.31 4.48-4.48a1 1 0 0 0 0-1.42l-.51-.51Z"/></svg>
                 </span>
-                <span>编辑分区</span>
+                <span id="openEditZoneLabel">编辑分区</span>
               </button>
 
               <button id="openAddItemModalBtn" type="button" class="op-btn op-btn-large" aria-label="新增食材">
                 <span class="op-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24"><path d="M6 2a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1v9a3 3 0 0 0 3 3h4a3 3 0 0 0 3-3v-9h1a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3H6Zm0 2h12a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm3 6h6v9a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-9Zm3 2a1 1 0 0 0-1 1v1h-1a1 1 0 1 0 0 2h1v1a1 1 0 1 0 2 0v-1h1a1 1 0 1 0 0-2h-1v-1a1 1 0 0 0-1-1Z"/></svg>
                 </span>
-                <span>新增食材</span>
+                <span id="openAddItemLabel">新增食材</span>
               </button>
 
               <button id="openLibraryModalBtn" type="button" class="op-btn op-btn-large" aria-label="管理食材库">
                 <span class="op-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24"><path d="M4 4a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v2h3a2 2 0 0 1 2 2v10a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4Zm2 0v14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8h-3v1a1 1 0 1 1-2 0V4H6Zm14 9a1 1 0 0 1-1 1h-2v2a1 1 0 1 1-2 0v-2h-2a1 1 0 1 1 0-2h2V10a1 1 0 1 1 2 0v2h2a1 1 0 0 1 1 1Z"/></svg>
                 </span>
-                <span>食材库</span>
+                <span id="openLibraryLabel">食材库</span>
+              </button>
+
+              <button id="openManualModalBtn" type="button" class="op-btn op-btn-large" aria-label="打开使用手册">
+                <span class="op-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M4 5a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v14.5a.5.5 0 0 1-.8.4A4.98 4.98 0 0 0 16 18.5H7a3 3 0 0 1-3-3V5Zm3-1a1 1 0 0 0-1 1v10.5a1 1 0 0 0 1 1h9a7.02 7.02 0 0 1 2 .29V5a1 1 0 0 0-1-1H7Zm2 3a1 1 0 1 1 0-2h6a1 1 0 1 1 0 2H9Zm0 4a1 1 0 1 1 0-2h6a1 1 0 1 1 0 2H9Z"/></svg>
+                </span>
+                <span id="openManualLabel">使用手册</span>
+              </button>
+
+              <button id="openExportTxtBtn" type="button" class="op-btn op-btn-large" aria-label="导出可打印TXT清单">
+                <span class="op-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 3a1 1 0 0 1 1 1v8.59l2.3-2.3a1 1 0 1 1 1.4 1.42l-4 3.95a1 1 0 0 1-1.4 0l-4-3.95a1 1 0 0 1 1.4-1.42l2.3 2.3V4a1 1 0 0 1 1-1Zm-7 14a1 1 0 0 1 1 1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-1a1 1 0 1 1 2 0v1a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-1a1 1 0 0 1 1-1Z"/></svg>
+                </span>
+                <span id="openExportTxtLabel">导出TXT清单</span>
               </button>
             </div>
           </section>
 
-          <details class="panel-section lite-disclosure">
+          <details id="zoneItemsPanel" class="panel-section lite-disclosure" open>
             <summary id="zoneItemsTitle">当前分区食材</summary>
             <div id="zoneItemsList" class="item-list"></div>
           </details>
 
-          <details class="panel-section lite-disclosure">
-            <summary>浪费账本（近30天）</summary>
+          <details id="ledgerPanel" class="panel-section lite-disclosure">
+            <summary id="ledgerTitle">使用记录（近30天）</summary>
             <div id="ledgerSummary" class="ledger-summary"></div>
             <div id="ledgerList" class="ledger-list"></div>
           </details>
@@ -142,7 +170,7 @@
       <div class="modal-stack" role="dialog" aria-modal="true" aria-label="编辑卡片">
         <section id="modalCreateFridge" class="modal-card hidden">
           <header class="modal-head">
-            <h3>新增冰箱</h3>
+            <h3 id="modalCreateFridgeTitle">新增冰箱</h3>
             <button type="button" class="modal-close" data-modal-close aria-label="关闭">
               <svg viewBox="0 0 24 24"><path d="M6.7 5.3a1 1 0 0 0-1.4 1.4L10.6 12l-5.3 5.3a1 1 0 0 0 1.4 1.4l5.3-5.3 5.3 5.3a1 1 0 1 0 1.4-1.4L13.4 12l5.3-5.3a1 1 0 0 0-1.4-1.4L12 10.6 6.7 5.3Z"/></svg>
             </button>
@@ -172,7 +200,7 @@
 
         <section id="modalEditFridge" class="modal-card hidden">
           <header class="modal-head">
-            <h3>编辑当前冰箱</h3>
+            <h3 id="modalEditFridgeTitle">编辑当前冰箱</h3>
             <button type="button" class="modal-close" data-modal-close aria-label="关闭">
               <svg viewBox="0 0 24 24"><path d="M6.7 5.3a1 1 0 0 0-1.4 1.4L10.6 12l-5.3 5.3a1 1 0 0 0 1.4 1.4l5.3-5.3 5.3 5.3a1 1 0 1 0 1.4-1.4L13.4 12l5.3-5.3a1 1 0 0 0-1.4-1.4L12 10.6 6.7 5.3Z"/></svg>
             </button>
@@ -196,16 +224,21 @@
                 </button>
               </div>
             </div>
+            <div class="field">
+              <label for="activeFridgeTheme">冰箱颜色</label>
+              <input id="activeFridgeTheme" name="activeFridgeTheme" type="hidden" value="arctic" />
+              <div id="fridgeThemePicker" class="theme-picker" role="radiogroup" aria-label="选择冰箱颜色"></div>
+            </div>
             <div class="action-row">
               <button type="submit" class="btn btn-primary">保存冰箱</button>
-              <button id="deleteFridgeBtn" type="button" class="btn btn-danger">空仓删除</button>
+              <button id="deleteFridgeBtn" type="button" class="btn btn-danger">清空后删除</button>
             </div>
           </form>
         </section>
 
         <section id="modalCreateZone" class="modal-card hidden">
           <header class="modal-head">
-            <h3>新增分区</h3>
+            <h3 id="modalCreateZoneTitle">新增分区</h3>
             <button type="button" class="modal-close" data-modal-close aria-label="关闭">
               <svg viewBox="0 0 24 24"><path d="M6.7 5.3a1 1 0 0 0-1.4 1.4L10.6 12l-5.3 5.3a1 1 0 0 0 1.4 1.4l5.3-5.3 5.3 5.3a1 1 0 1 0 1.4-1.4L13.4 12l5.3-5.3a1 1 0 0 0-1.4-1.4L12 10.6 6.7 5.3Z"/></svg>
             </button>
@@ -245,7 +278,7 @@
 
         <section id="modalEditZone" class="modal-card hidden">
           <header class="modal-head">
-            <h3>编辑当前分区</h3>
+            <h3 id="modalEditZoneTitle">编辑当前分区</h3>
             <button type="button" class="modal-close" data-modal-close aria-label="关闭">
               <svg viewBox="0 0 24 24"><path d="M6.7 5.3a1 1 0 0 0-1.4 1.4L10.6 12l-5.3 5.3a1 1 0 0 0 1.4 1.4l5.3-5.3 5.3 5.3a1 1 0 1 0 1.4-1.4L13.4 12l5.3-5.3a1 1 0 0 0-1.4-1.4L12 10.6 6.7 5.3Z"/></svg>
             </button>
@@ -281,14 +314,14 @@
             </div>
             <div class="action-row">
               <button type="submit" class="btn btn-primary">保存分区</button>
-              <button id="deleteZoneBtn" type="button" class="btn btn-danger">空区删除</button>
+              <button id="deleteZoneBtn" type="button" class="btn btn-danger">清空后删除</button>
             </div>
           </form>
         </section>
 
         <section id="modalLibrary" class="modal-card hidden">
           <header class="modal-head">
-            <h3>食材库管理</h3>
+            <h3 id="modalLibraryTitle">食材库管理</h3>
             <button type="button" class="modal-close" data-modal-close aria-label="关闭">
               <svg viewBox="0 0 24 24"><path d="M6.7 5.3a1 1 0 0 0-1.4 1.4L10.6 12l-5.3 5.3a1 1 0 0 0 1.4 1.4l5.3-5.3 5.3 5.3a1 1 0 1 0 1.4-1.4L13.4 12l5.3-5.3a1 1 0 0 0-1.4-1.4L12 10.6 6.7 5.3Z"/></svg>
             </button>
@@ -344,9 +377,23 @@
           <div id="libraryList" class="library-list"></div>
         </section>
 
+        <section id="modalManual" class="modal-card hidden">
+          <header class="modal-head">
+            <h3 id="modalManualTitle">使用手册</h3>
+            <button type="button" class="modal-close" data-modal-close aria-label="关闭">
+              <svg viewBox="0 0 24 24"><path d="M6.7 5.3a1 1 0 0 0-1.4 1.4L10.6 12l-5.3 5.3a1 1 0 0 0 1.4 1.4l5.3-5.3 5.3 5.3a1 1 0 1 0 1.4-1.4L13.4 12l5.3-5.3a1 1 0 0 0-1.4-1.4L12 10.6 6.7 5.3Z"/></svg>
+            </button>
+          </header>
+
+          <div class="manual-toolbar">
+            <p id="manualIntro" class="manual-intro">从“先处理临期”开始，用最少步骤管理冰箱。</p>
+          </div>
+          <div id="manualContent" class="manual-content"></div>
+        </section>
+
         <section id="modalItem" class="modal-card hidden">
           <header class="modal-head">
-            <h3>食材编辑卡</h3>
+            <h3 id="modalItemTitle">食材编辑卡</h3>
             <button type="button" class="modal-close" data-modal-close aria-label="关闭">
               <svg viewBox="0 0 24 24"><path d="M6.7 5.3a1 1 0 0 0-1.4 1.4L10.6 12l-5.3 5.3a1 1 0 0 0 1.4 1.4l5.3-5.3 5.3 5.3a1 1 0 1 0 1.4-1.4L13.4 12l5.3-5.3a1 1 0 0 0-1.4-1.4L12 10.6 6.7 5.3Z"/></svg>
             </button>
@@ -417,13 +464,13 @@
               <div class="field">
                 <label for="itemStatus">状态</label>
                 <select id="itemStatus" name="itemStatus">
-                  <option value="Auto">自动判定</option>
+                  <option value="Auto">自动判断</option>
                   <option value="Fresh">新鲜</option>
-                  <option value="Watch">关注</option>
-                  <option value="Rescue Now">立即救援</option>
+                  <option value="Watch">需关注</option>
+                  <option value="Rescue Now">优先处理</option>
                   <option value="Critical">今天处理</option>
                   <option value="Expired">已过期</option>
-                  <option value="Consumed">已吃完</option>
+                  <option value="Consumed">已用完</option>
                 </select>
               </div>
               <div class="field">

@@ -1,6 +1,6 @@
 {
-  "name": "HomeAssistant-Nova",
-  "short_name": "Nova",
+  "name": "RAVIS-冰箱助手",
+  "short_name": "RAVIS",
   "description": "iPad standalone fridge inventory manager with localStorage.",
   "start_url": "./index.html",
   "scope": "./",
