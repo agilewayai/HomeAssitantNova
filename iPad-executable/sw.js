@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_VERSION = "homeassistant-nova-ipad-v3";
+const CACHE_VERSION = "homeassistant-nova-ipad-v4";
 const CORE_ASSETS = [
   "./",
   "./index.html",

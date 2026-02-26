@@ -1,12 +1,13 @@
 "use strict";
 
-const APP_RELEASE_VERSION = "2.4.0";
+const APP_RELEASE_VERSION = "2.5.0";
 const STORAGE_SCHEMA_VERSION = 4;
 const STORAGE_NAMESPACE = "homeassistant-nova";
 const STORAGE_KEY = `${STORAGE_NAMESPACE}:state`;
 const STORAGE_META_KEY = `${STORAGE_NAMESPACE}:meta`;
 const STORAGE_BACKUP_INDEX_KEY = `${STORAGE_NAMESPACE}:backup-index`;
 const STORAGE_BACKUP_PREFIX = `${STORAGE_NAMESPACE}:backup:`;
+const STORAGE_VIEW_KEY = `${STORAGE_NAMESPACE}:view`;
 const LEGACY_STORAGE_KEYS = ["homeassistant-nova-v2"];
 const MAX_STORAGE_BACKUPS = 8;
 const UPGRADE_RELOAD_GUARD_KEY = `${STORAGE_NAMESPACE}:reloaded:${APP_RELEASE_VERSION}`;
@@ -114,12 +115,12 @@ function compactManualToObject(rows, note) {
 const DEFAULT_COMPACT_LOCALE_ZH = {"v":1,"t":["RAVIS-冰箱助手","图标化操作 + 弹出式编辑卡片，减少界面噪音，专注“先处理临期食材”。","语言","我的冰箱","新增","编辑","每日检查","完成今日检查","保鲜概览","近期优先食材","用餐建议","快捷操作","新增分区","编辑分区","新增食材","食材库","使用手册","导出TXT清单","当前分区食材","使用记录（近30天）","新增冰箱","编辑当前冰箱","新增分区","编辑当前分区","食材库管理","使用手册 / Manual","食材编辑卡","关闭冰箱门","打开冰箱门","食材","临期","过期","30天丢弃","暂无冰箱，请先创建。","暂无分区。","暂无建议。","暂无记录。","其他","默认","天","从“先处理临期”开始，用最少步骤管理冰箱。","冰箱库存打印清单","导出时间","暂无可导出的库存数据。","TXT清单已导出。","冰箱","分区","食材数","该分区暂无食材","简体中文","English","日本語","Deutsch","Français","Español","Italiano"],"z":["蔬菜","蛋白","乳制品","饮品","剩菜","冷冻","零食","其他"],"c":["蔬菜","水果","蛋白","乳制品","饮品","剩菜","零食","其他"],"s":["自动判断","新鲜","需关注","优先处理","今天处理","已过期","已用完"],"th":["极地银","薄荷绿","珍珠白","暖杏橙","雾粉","石墨灰"],"m":[["1. 快速开始",1,["新建冰箱并确认默认分区。","点“新增食材”或从“食材库”快速引用。","每天查看“近期优先食材”，优先处理临期条目。"]],["2. 核心操作",0,["分区支持选中、编辑，且仅在清空后删除。","食材可跨分区移动，状态可自动判断或手动覆盖。","支持语音录入食材名、单位、备注。","可切换冰箱颜色主题，便于多冰箱辨识。"]],["3. 数据安全",0,["数据存储在本机浏览器 localStorage。","版本升级前自动写入备份区并迁移。","迁移异常时优先尝试最近备份恢复。"]]],"n":"提示：避免长期在隐私模式使用，清理浏览器存储会导致数据丢失。"};
 
 const FRIDGE_THEME_OPTIONS = [
-  { id: "arctic", preview: "#7cc5b5", label: "极地银" },
-  { id: "mint", preview: "#58b894", label: "薄荷绿" },
-  { id: "pearl", preview: "#c8ddd5", label: "珍珠白" },
+  { id: "arctic", preview: "#8bbcf7", label: "极地银" },
+  { id: "mint", preview: "#7fa9dc", label: "薄荷绿" },
+  { id: "pearl", preview: "#d8e6fa", label: "珍珠白" },
   { id: "sunset", preview: "#d8a873", label: "暖杏橙" },
   { id: "rose", preview: "#d39ab6", label: "雾粉" },
-  { id: "graphite", preview: "#7a948d", label: "石墨灰" },
+  { id: "graphite", preview: "#7d92b1", label: "石墨灰" },
 ];
 
 const DEFAULT_FRIDGE_THEME = "arctic";
@@ -209,6 +210,12 @@ const MAX_RENDERED_LEDGER = 20;
 const MAX_INGREDIENT_LIBRARY = 240;
 const MAX_LIBRARY_SUGGESTIONS = 8;
 const MAX_LIBRARY_LIST = 120;
+const MAX_FRIDGES = 12;
+const MAX_ZONES_PER_FRIDGE = 28;
+const MAX_ITEMS_PER_ZONE = 260;
+const MAX_TOTAL_ITEMS = MAX_FRIDGES * MAX_ZONES_PER_FRIDGE * 80;
+const DEFAULT_SAVE_DELAY_MS = 220;
+const MAX_DAYS_LEFT_CACHE = 320;
 
 const ui = {
   doorOpen: true,
@@ -217,6 +224,12 @@ const ui = {
   recordingButton: null,
   libraryQueryTimer: null,
   deferredSaveTimer: null,
+  deferredSaveIdleId: null,
+  stateDirty: false,
+  renderQueued: false,
+  daysCacheDate: "",
+  daysCacheTodayMs: 0,
+  daysLeftCache: new Map(),
   sectionObserver: null,
   activeModalId: null,
   lastFocusedElement: null,
@@ -505,21 +518,39 @@ function setupNavigatorObserver() {
   targets.forEach((target) => ui.sectionObserver.observe(target));
 }
 
-function scheduleDeferredSaveState(delayMs = 180) {
-  const delay = clamp(Math.round(toNumber(delayMs, 180)), 16, 2000);
+function scheduleDeferredSaveState(delayMs = DEFAULT_SAVE_DELAY_MS) {
+  const delay = clamp(Math.round(toNumber(delayMs, DEFAULT_SAVE_DELAY_MS)), 16, 3000);
   if (ui.deferredSaveTimer) {
     clearTimeout(ui.deferredSaveTimer);
   }
+
+  if (ui.deferredSaveIdleId && typeof cancelIdleCallback === "function") {
+    cancelIdleCallback(ui.deferredSaveIdleId);
+    ui.deferredSaveIdleId = null;
+  }
+
   ui.deferredSaveTimer = setTimeout(() => {
     ui.deferredSaveTimer = null;
+    if (typeof requestIdleCallback === "function") {
+      ui.deferredSaveIdleId = requestIdleCallback(() => {
+        ui.deferredSaveIdleId = null;
+        saveState();
+      }, { timeout: 1200 });
+      return;
+    }
     saveState();
   }, delay);
 }
 
 function flushDeferredSaveState() {
-  if (!ui.deferredSaveTimer) return;
-  clearTimeout(ui.deferredSaveTimer);
-  ui.deferredSaveTimer = null;
+  if (ui.deferredSaveTimer) {
+    clearTimeout(ui.deferredSaveTimer);
+    ui.deferredSaveTimer = null;
+  }
+  if (ui.deferredSaveIdleId && typeof cancelIdleCallback === "function") {
+    cancelIdleCallback(ui.deferredSaveIdleId);
+    ui.deferredSaveIdleId = null;
+  }
   saveState();
 }
 
@@ -950,28 +981,79 @@ function loadState() {
       clearUpgradeReloadGuard();
     }
 
-    return normalized;
+    return applyStoredViewState(normalized);
   }
 
   const recovered = tryRestoreFromBackup();
   if (recovered) {
-    return recovered;
+    return applyStoredViewState(recovered);
   }
 
   const seeded = seedState();
   saveStateWithMeta(seeded, { reason: "seed" });
   clearUpgradeReloadGuard();
-  return seeded;
+  return applyStoredViewState(seeded);
+}
+
+function applyStoredViewState(payload) {
+  if (!payload || typeof payload !== "object") return payload;
+  const view = readViewState();
+  if (!view) return payload;
+
+  return {
+    ...payload,
+    activeFridgeId: view.activeFridgeId || payload.activeFridgeId || null,
+    selectedZoneId: view.selectedZoneId || payload.selectedZoneId || null,
+  };
+}
+
+function readViewState() {
+  let raw = null;
+  try {
+    raw = localStorage.getItem(STORAGE_VIEW_KEY);
+  } catch (_err) {
+    return null;
+  }
+  if (!raw) return null;
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return null;
+    return {
+      activeFridgeId: cleanText(parsed.activeFridgeId),
+      selectedZoneId: cleanText(parsed.selectedZoneId),
+    };
+  } catch (_err) {
+    return null;
+  }
+}
+
+function persistViewState(source) {
+  if (!source || typeof source !== "object") return false;
+  const payload = {
+    activeFridgeId: cleanText(source.activeFridgeId),
+    selectedZoneId: cleanText(source.selectedZoneId),
+    savedAt: new Date().toISOString(),
+  };
+  return tryLocalStorageSetItem(STORAGE_VIEW_KEY, JSON.stringify(payload));
 }
 
 function normalizeStatePayload(payload) {
   if (!payload || typeof payload !== "object") return null;
 
+  const fridges = Array.isArray(payload.fridges) ? payload.fridges.slice(0, MAX_FRIDGES) : [];
+  let totalItems = 0;
+
   const normalized = {
-    fridges: Array.isArray(payload.fridges) ? payload.fridges.map(normalizeFridge).filter(Boolean) : [],
+    fridges: fridges
+      .map((fridge) => normalizeFridge(fridge, (count) => {
+        totalItems += count;
+        return totalItems <= MAX_TOTAL_ITEMS;
+      }))
+      .filter(Boolean),
     activeFridgeId: payload.activeFridgeId || null,
     selectedZoneId: payload.selectedZoneId || null,
-    logs: Array.isArray(payload.logs) ? payload.logs.map(normalizeLog).filter(Boolean) : [],
+    logs: Array.isArray(payload.logs) ? payload.logs.slice(0, 600).map(normalizeLog).filter(Boolean) : [],
     ingredientLibrary: normalizeIngredientLibrary(payload.ingredientLibrary),
   };
 
@@ -1291,9 +1373,10 @@ function createItem(input) {
   };
 }
 
-function normalizeFridge(fridge) {
+function normalizeFridge(fridge, itemGuard = null) {
   if (!fridge || typeof fridge !== "object") return null;
-  const zones = Array.isArray(fridge.zones) ? fridge.zones.map(normalizeZone).filter(Boolean) : [];
+  const rawZones = Array.isArray(fridge.zones) ? fridge.zones.slice(0, MAX_ZONES_PER_FRIDGE) : [];
+  const zones = rawZones.map((zone) => normalizeZone(zone, itemGuard)).filter(Boolean);
   return {
     id: fridge.id || makeId(),
     name: cleanText(fridge.name) || "未命名冰箱",
@@ -1307,9 +1390,15 @@ function normalizeFridge(fridge) {
   };
 }
 
-function normalizeZone(zone) {
+function normalizeZone(zone, itemGuard = null) {
   if (!zone || typeof zone !== "object") return null;
-  const items = Array.isArray(zone.items) ? zone.items.map(normalizeItem).filter(Boolean) : [];
+  const rawItems = Array.isArray(zone.items) ? zone.items.slice(0, MAX_ITEMS_PER_ZONE) : [];
+  const items = [];
+  for (const rawItem of rawItems) {
+    if (typeof itemGuard === "function" && !itemGuard(1)) break;
+    const item = normalizeItem(rawItem);
+    if (item) items.push(item);
+  }
   return {
     id: zone.id || makeId(),
     name: cleanText(zone.name) || "分区",
@@ -1490,7 +1579,12 @@ function trimIngredientLibrary() {
 }
 
 function saveState() {
-  saveStateWithMeta(state, { reason: "save" });
+  if (!ui.stateDirty) return true;
+  const ok = saveStateWithMeta(state, { reason: "save" });
+  if (ok) {
+    ui.stateDirty = false;
+  }
+  return ok;
 }
 
 function saveStateWithMeta(payload, context = {}) {
@@ -1518,17 +1612,24 @@ function saveStateWithMeta(payload, context = {}) {
     lastMigrationFromApp: cleanText(context.fromAppVersion),
     lastBackupKey: cleanText(context.backupKey),
   });
+  persistViewState(payload);
   return true;
 }
 
-function persistAndRender() {
-  saveState();
+function persistAndRender(options = {}) {
+  const immediate = Boolean(options.immediate);
+  ui.stateDirty = true;
+  if (immediate) {
+    flushDeferredSaveState();
+  } else {
+    scheduleDeferredSaveState();
+  }
   render();
 }
 
 function ensureSelectionIntegrity() {
   if (!state.fridges.length) {
-    const fallback = createFridge("主厨房冰箱", "厨房");
+    const fallback = createFridge("主厨房冰箱", "厨房", { withStarterItems: false });
     state.fridges.push(fallback);
   }
 
@@ -1544,7 +1645,7 @@ function ensureSelectionIntegrity() {
   }
 
   if (!active.zones.length) {
-    active.zones = createDefaultZones().slice(0, 1);
+    active.zones = createDefaultZones(false).slice(0, 1);
   }
 
   const selectedExists = active.zones.some((zone) => zone.id === state.selectedZoneId);
@@ -1564,13 +1665,17 @@ function getSelectedZone(fridge) {
 
 function onCreateFridge(event) {
   event.preventDefault();
+  if (state.fridges.length >= MAX_FRIDGES) {
+    showToast(`冰箱数量已达上限（${MAX_FRIDGES}）。`);
+    return;
+  }
   const name = cleanText(els.createFridgeName.value);
   if (!name) {
     showToast("冰箱名称不能为空。");
     return;
   }
   const location = cleanText(els.createFridgeLocation.value);
-  const fridge = createFridge(name, location);
+  const fridge = createFridge(name, location, { withStarterItems: false });
   state.fridges.unshift(fridge);
   state.activeFridgeId = fridge.id;
   state.selectedZoneId = fridge.zones[0]?.id || null;
@@ -1589,7 +1694,8 @@ function onSelectFridge(event) {
   state.activeFridgeId = fridgeId;
   ensureSelectionIntegrity();
   resetItemForm();
-  persistAndRender();
+  persistViewState(state);
+  render();
 }
 
 function onSaveActiveFridge(event) {
@@ -1634,7 +1740,7 @@ function onDeleteFridge() {
 
   state.fridges = state.fridges.filter((entry) => entry.id !== fridge.id);
   if (!state.fridges.length) {
-    state.fridges.push(createFridge("主厨房冰箱", "厨房"));
+    state.fridges.push(createFridge("主厨房冰箱", "厨房", { withStarterItems: false }));
   }
   state.activeFridgeId = state.fridges[0].id;
   state.selectedZoneId = state.fridges[0].zones[0]?.id || null;
@@ -1677,6 +1783,10 @@ function onCreateZone(event) {
   event.preventDefault();
   const fridge = getActiveFridge();
   if (!fridge) return;
+  if (fridge.zones.length >= MAX_ZONES_PER_FRIDGE) {
+    showToast(`分区数量已达上限（${MAX_ZONES_PER_FRIDGE}）。`);
+    return;
+  }
 
   const name = cleanText(els.createZoneName.value);
   if (!name) {
@@ -1755,7 +1865,7 @@ function onSelectZone(event) {
   if (!zoneId || zoneId === state.selectedZoneId) return;
 
   state.selectedZoneId = zoneId;
-  scheduleDeferredSaveState();
+  persistViewState(state);
   render();
 }
 
@@ -1818,6 +1928,12 @@ function onSaveItem(event) {
       return;
     }
 
+    const isCrossZoneMove = sourceZone.id !== targetZone.id;
+    if (isCrossZoneMove && targetZone.items.length >= MAX_ITEMS_PER_ZONE) {
+      showToast(`目标分区已达容量上限（${MAX_ITEMS_PER_ZONE}）。`);
+      return;
+    }
+
     const old = sourceZone.items[oldIndex];
     sourceZone.items.splice(oldIndex, 1);
     const updated = {
@@ -1836,6 +1952,16 @@ function onSaveItem(event) {
     persistAndRender();
     closeModal();
     showToast("食材已更新。");
+    return;
+  }
+
+  if (targetZone.items.length >= MAX_ITEMS_PER_ZONE) {
+    showToast(`该分区已达容量上限（${MAX_ITEMS_PER_ZONE}）。`);
+    return;
+  }
+
+  if (countTotalItems(state.fridges) >= MAX_TOTAL_ITEMS) {
+    showToast(`库存总量已达系统上限（${MAX_TOTAL_ITEMS}），请先清理后再添加。`);
     return;
   }
 
@@ -2435,7 +2561,6 @@ function startEditItem(zone, item) {
   els.itemSubmitBtn.textContent = "保存食材";
   els.cancelEditItemBtn.classList.remove("hidden");
   refreshItemDerivedOutputs();
-  saveState();
   render();
   openModal("item", { preserveFormState: true });
   showToast(`正在编辑：${item.name}`);
@@ -2566,6 +2691,23 @@ function computeStateMetrics() {
 }
 
 function render() {
+  if (ui.renderQueued) return;
+  ui.renderQueued = true;
+
+  const run = () => {
+    ui.renderQueued = false;
+    doRender();
+  };
+
+  if (typeof requestAnimationFrame === "function") {
+    requestAnimationFrame(run);
+    return;
+  }
+
+  setTimeout(run, 0);
+}
+
+function doRender() {
   ensureSelectionIntegrity();
   const metrics = computeStateMetrics();
   const activeFridge = getActiveFridge();
@@ -3181,6 +3323,19 @@ function countItemsInFridge(fridge) {
   return fridge.zones.reduce((sum, zone) => sum + zone.items.length, 0);
 }
 
+function countTotalItems(fridges) {
+  const source = Array.isArray(fridges) ? fridges : [];
+  let total = 0;
+  for (const fridge of source) {
+    if (!fridge || !Array.isArray(fridge.zones)) continue;
+    for (const zone of fridge.zones) {
+      if (!zone || !Array.isArray(zone.items)) continue;
+      total += zone.items.length;
+    }
+  }
+  return total;
+}
+
 function flattenFridgeItems(fridge) {
   return fridge.zones.flatMap((zone) => zone.items.map((item) => ({ zone, item })));
 }
@@ -3203,13 +3358,34 @@ function pickNames(items, limit) {
     .filter(Boolean);
 }
 
+function getCachedTodayBaseMs() {
+  const today = todayISO();
+  if (ui.daysCacheDate !== today) {
+    ui.daysCacheDate = today;
+    ui.daysCacheTodayMs = parseISODate(today).getTime();
+    ui.daysLeftCache.clear();
+  }
+  return ui.daysCacheTodayMs;
+}
+
 function computeDaysLeft(dateLike) {
   const normalized = normalizeDate(dateLike);
   if (!normalized) return null;
 
-  const expiry = parseISODate(normalized);
-  const today = parseISODate(todayISO());
-  return Math.ceil((expiry.getTime() - today.getTime()) / DAY_MS);
+  const baseMs = getCachedTodayBaseMs();
+  const cached = ui.daysLeftCache.get(normalized);
+  if (typeof cached === "number") {
+    return cached;
+  }
+
+  const expiryMs = parseISODate(normalized).getTime();
+  const days = Math.ceil((expiryMs - baseMs) / DAY_MS);
+
+  if (ui.daysLeftCache.size >= MAX_DAYS_LEFT_CACHE) {
+    ui.daysLeftCache.clear();
+  }
+  ui.daysLeftCache.set(normalized, days);
+  return days;
 }
 
 function daysBetween(startISO, endISO) {
