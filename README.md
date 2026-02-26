@@ -15,6 +15,7 @@
 - 语音输入：支持浏览器语音识别输入名称、单位、备注等文本字段。
 - 冰箱主题色：可为每台冰箱设置不同颜色主题。
 - 多语言切换：支持 `中文 / English / 日本語 / Deutsch / Français / Español / Italiano`。
+- 语言包优化：中文内置，其他语言采用紧凑 JSON 语言包并按需懒加载。
 - 应用内手册：内置多语言使用手册页（跟随当前语言）。
 - 打印清单导出：一键导出分层、排版清晰的库存 `.txt` 文件（冰箱 -> 分区 -> 食材）。
 
@@ -27,6 +28,7 @@
 - `homeassistant-nova:backup-index`：备份索引。
 - `homeassistant-nova:backup:*`：历史备份快照（升级迁移前写入）。
 - `homeassistant-nova:locale`：用户语言偏好。
+- `locales/*.json`：非默认语言紧凑包（按需请求并缓存）。
 
 安全策略：
 - 版本升级时先创建备份快照，再执行数据迁移。
@@ -78,6 +80,7 @@
 - Voice input for text fields (browser speech recognition support required).
 - Per-fridge color themes for quick visual differentiation.
 - Locale switching: `Chinese / English / Japanese / German / French / Spanish / Italian`.
+- Locale optimization: Chinese is built-in; other locales use compact JSON packs with lazy loading.
 - In-app manual pages (localized with current locale).
 - Printable list export: one-click layered `.txt` export (Fridge -> Zone -> Items) for printing and sharing.
 
@@ -90,6 +93,7 @@ Primary keys:
 - `homeassistant-nova:backup-index`: backup pointer list.
 - `homeassistant-nova:backup:*`: backup snapshots created before migrations.
 - `homeassistant-nova:locale`: user locale preference.
+- `locales/*.json`: compact non-default locale packs (requested lazily and cached).
 
 Safety mechanism:
 - On version upgrade, backup snapshot is written first, then migration runs.

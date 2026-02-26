@@ -6,6 +6,7 @@ This build runs as an installable iPad app (standalone window) with offline supp
 - `index.html`: single-page production build for iPad
 - `manifest.webmanifest`: app install metadata
 - `sw.js`: offline cache service worker
+- `locales/*.json`: lazy-loaded compact locale packs (EN/JA/DE/FR/ES/IT)
 - `icon.svg`: app icon source
 - `start-ipad-server.command`: one-click local server
 

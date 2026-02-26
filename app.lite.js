@@ -1,6 +1,6 @@
 "use strict";
 
-const APP_RELEASE_VERSION = "2.3.0";
+const APP_RELEASE_VERSION = "2.4.0";
 const STORAGE_SCHEMA_VERSION = 4;
 const STORAGE_NAMESPACE = "homeassistant-nova";
 const STORAGE_KEY = `${STORAGE_NAMESPACE}:state`;
@@ -15,883 +15,144 @@ const SUPPORTED_LOCALES = ["zh", "en", "ja", "de", "fr", "es", "it"];
 const DEFAULT_LOCALE = "zh";
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-const ZONE_TYPE_LABEL = {
-  zh: {
-    vegetable: "蔬菜",
-    protein: "蛋白",
-    dairy: "乳制品",
-    drinking: "饮品",
-    leftover: "剩菜",
-    frozen: "冷冻",
-    snack: "零食",
-    other: "其他",
-  },
-  en: {
-    vegetable: "Vegetables",
-    protein: "Protein",
-    dairy: "Dairy",
-    drinking: "Drinks",
-    leftover: "Leftovers",
-    frozen: "Frozen",
-    snack: "Snacks",
-    other: "Other",
-  },
-  ja: {
-    vegetable: "野菜",
-    protein: "たんぱく質",
-    dairy: "乳製品",
-    drinking: "飲料",
-    leftover: "作り置き",
-    frozen: "冷凍",
-    snack: "軽食",
-    other: "その他",
-  },
-  de: {
-    vegetable: "Gemüse",
-    protein: "Protein",
-    dairy: "Molkerei",
-    drinking: "Getränke",
-    leftover: "Reste",
-    frozen: "Tiefkühl",
-    snack: "Snacks",
-    other: "Andere",
-  },
-  fr: {
-    vegetable: "Légumes",
-    protein: "Protéines",
-    dairy: "Produits laitiers",
-    drinking: "Boissons",
-    leftover: "Restes",
-    frozen: "Surgelés",
-    snack: "Snacks",
-    other: "Autre",
-  },
-  es: {
-    vegetable: "Verduras",
-    protein: "Proteína",
-    dairy: "Lácteos",
-    drinking: "Bebidas",
-    leftover: "Sobras",
-    frozen: "Congelados",
-    snack: "Snacks",
-    other: "Otro",
-  },
-  it: {
-    vegetable: "Verdure",
-    protein: "Proteine",
-    dairy: "Latticini",
-    drinking: "Bevande",
-    leftover: "Avanzi",
-    frozen: "Surgelati",
-    snack: "Snack",
-    other: "Altro",
-  },
-};
+const I18N_TEXT_KEYS = [
+  "app_title",
+  "app_subtitle",
+  "locale_label",
+  "fleet_title",
+  "btn_add",
+  "btn_edit",
+  "audit_title",
+  "audit_complete",
+  "risk_title",
+  "rescue_title",
+  "ideas_title",
+  "quick_actions_title",
+  "btn_create_zone",
+  "btn_edit_zone",
+  "btn_add_item",
+  "btn_library",
+  "btn_manual",
+  "btn_export_txt",
+  "zone_items_title",
+  "ledger_title",
+  "modal_create_fridge_title",
+  "modal_edit_fridge_title",
+  "modal_create_zone_title",
+  "modal_edit_zone_title",
+  "modal_library_title",
+  "modal_manual_title",
+  "modal_item_title",
+  "toggle_close_door",
+  "toggle_open_door",
+  "kpi_items",
+  "kpi_rescue",
+  "kpi_expired",
+  "kpi_wasted_30",
+  "empty_no_fridge",
+  "empty_no_zone",
+  "empty_no_idea",
+  "empty_no_log",
+  "label_other",
+  "label_default",
+  "label_day",
+  "manual_intro",
+  "export_title",
+  "export_generated_at",
+  "export_no_data",
+  "export_done",
+  "export_fridge",
+  "export_zone",
+  "export_items",
+  "export_empty_zone",
+  "locale_option_zh",
+  "locale_option_en",
+  "locale_option_ja",
+  "locale_option_de",
+  "locale_option_fr",
+  "locale_option_es",
+  "locale_option_it",
+];
 
-const CATEGORY_LABEL = {
-  zh: {
-    vegetable: "蔬菜",
-    fruit: "水果",
-    protein: "蛋白",
-    dairy: "乳制品",
-    drink: "饮品",
-    leftover: "剩菜",
-    snack: "零食",
-    other: "其他",
-  },
-  en: {
-    vegetable: "Vegetables",
-    fruit: "Fruit",
-    protein: "Protein",
-    dairy: "Dairy",
-    drink: "Drinks",
-    leftover: "Leftovers",
-    snack: "Snacks",
-    other: "Other",
-  },
-  ja: {
-    vegetable: "野菜",
-    fruit: "果物",
-    protein: "たんぱく質",
-    dairy: "乳製品",
-    drink: "飲料",
-    leftover: "作り置き",
-    snack: "軽食",
-    other: "その他",
-  },
-  de: {
-    vegetable: "Gemüse",
-    fruit: "Obst",
-    protein: "Protein",
-    dairy: "Molkerei",
-    drink: "Getränke",
-    leftover: "Reste",
-    snack: "Snacks",
-    other: "Andere",
-  },
-  fr: {
-    vegetable: "Légumes",
-    fruit: "Fruits",
-    protein: "Protéines",
-    dairy: "Produits laitiers",
-    drink: "Boissons",
-    leftover: "Restes",
-    snack: "Snacks",
-    other: "Autre",
-  },
-  es: {
-    vegetable: "Verduras",
-    fruit: "Frutas",
-    protein: "Proteína",
-    dairy: "Lácteos",
-    drink: "Bebidas",
-    leftover: "Sobras",
-    snack: "Snacks",
-    other: "Otro",
-  },
-  it: {
-    vegetable: "Verdure",
-    fruit: "Frutta",
-    protein: "Proteine",
-    dairy: "Latticini",
-    drink: "Bevande",
-    leftover: "Avanzi",
-    snack: "Snack",
-    other: "Altro",
-  },
-};
+const ZONE_TYPE_KEYS = ["vegetable", "protein", "dairy", "drinking", "leftover", "frozen", "snack", "other"];
+const CATEGORY_KEYS = ["vegetable", "fruit", "protein", "dairy", "drink", "leftover", "snack", "other"];
+const STATUS_KEYS = ["Auto", "Fresh", "Watch", "Rescue Now", "Critical", "Expired", "Consumed"];
+const THEME_KEYS = ["arctic", "mint", "pearl", "sunset", "rose", "graphite"];
+const LOCALE_FILE_BASE = "./locales";
+const LOCALE_FETCH_TIMEOUT_MS = 4200;
 
-const STATUS_LABEL = {
-  zh: {
-    Auto: "自动判断",
-    Fresh: "新鲜",
-    Watch: "需关注",
-    "Rescue Now": "优先处理",
-    Critical: "今天处理",
-    Expired: "已过期",
-    Consumed: "已用完",
-  },
-  en: {
-    Auto: "Auto",
-    Fresh: "Fresh",
-    Watch: "Watch",
-    "Rescue Now": "Rescue Now",
-    Critical: "Critical",
-    Expired: "Expired",
-    Consumed: "Consumed",
-  },
-  ja: {
-    Auto: "自動判定",
-    Fresh: "新鮮",
-    Watch: "要注意",
-    "Rescue Now": "優先消費",
-    Critical: "本日優先",
-    Expired: "期限切れ",
-    Consumed: "消費済み",
-  },
-  de: {
-    Auto: "Automatisch",
-    Fresh: "Frisch",
-    Watch: "Beobachten",
-    "Rescue Now": "Jetzt verbrauchen",
-    Critical: "Kritisch",
-    Expired: "Abgelaufen",
-    Consumed: "Verbraucht",
-  },
-  fr: {
-    Auto: "Automatique",
-    Fresh: "Frais",
-    Watch: "À surveiller",
-    "Rescue Now": "À traiter",
-    Critical: "Critique",
-    Expired: "Périmé",
-    Consumed: "Consommé",
-  },
-  es: {
-    Auto: "Automático",
-    Fresh: "Fresco",
-    Watch: "Vigilar",
-    "Rescue Now": "Prioritario",
-    Critical: "Crítico",
-    Expired: "Caducado",
-    Consumed: "Consumido",
-  },
-  it: {
-    Auto: "Automatico",
-    Fresh: "Fresco",
-    Watch: "Da controllare",
-    "Rescue Now": "Prioritario",
-    Critical: "Critico",
-    Expired: "Scaduto",
-    Consumed: "Consumato",
-  },
-};
+function compactArrayToMap(keys, values) {
+  const list = Array.isArray(values) ? values : [];
+  const out = {};
+  keys.forEach((key, index) => {
+    out[key] = cleanText(list[index]) || "";
+  });
+  return out;
+}
+
+function compactManualToObject(rows, note) {
+  const sections = Array.isArray(rows)
+    ? rows
+        .map((row) => {
+          if (!Array.isArray(row) || !row.length) return null;
+          const [title, orderedFlag, items] = row;
+          return {
+            title: cleanText(title),
+            ordered: orderedFlag === 1,
+            items: Array.isArray(items) ? items.map((item) => cleanText(item)).filter(Boolean) : [],
+          };
+        })
+        .filter(Boolean)
+    : [];
+
+  return {
+    sections,
+    note: cleanText(note),
+  };
+}
+
+const DEFAULT_COMPACT_LOCALE_ZH = {"v":1,"t":["RAVIS-冰箱助手","图标化操作 + 弹出式编辑卡片，减少界面噪音，专注“先处理临期食材”。","语言","我的冰箱","新增","编辑","每日检查","完成今日检查","保鲜概览","近期优先食材","用餐建议","快捷操作","新增分区","编辑分区","新增食材","食材库","使用手册","导出TXT清单","当前分区食材","使用记录（近30天）","新增冰箱","编辑当前冰箱","新增分区","编辑当前分区","食材库管理","使用手册 / Manual","食材编辑卡","关闭冰箱门","打开冰箱门","食材","临期","过期","30天丢弃","暂无冰箱，请先创建。","暂无分区。","暂无建议。","暂无记录。","其他","默认","天","从“先处理临期”开始，用最少步骤管理冰箱。","冰箱库存打印清单","导出时间","暂无可导出的库存数据。","TXT清单已导出。","冰箱","分区","食材数","该分区暂无食材","简体中文","English","日本語","Deutsch","Français","Español","Italiano"],"z":["蔬菜","蛋白","乳制品","饮品","剩菜","冷冻","零食","其他"],"c":["蔬菜","水果","蛋白","乳制品","饮品","剩菜","零食","其他"],"s":["自动判断","新鲜","需关注","优先处理","今天处理","已过期","已用完"],"th":["极地银","薄荷绿","珍珠白","暖杏橙","雾粉","石墨灰"],"m":[["1. 快速开始",1,["新建冰箱并确认默认分区。","点“新增食材”或从“食材库”快速引用。","每天查看“近期优先食材”，优先处理临期条目。"]],["2. 核心操作",0,["分区支持选中、编辑，且仅在清空后删除。","食材可跨分区移动，状态可自动判断或手动覆盖。","支持语音录入食材名、单位、备注。","可切换冰箱颜色主题，便于多冰箱辨识。"]],["3. 数据安全",0,["数据存储在本机浏览器 localStorage。","版本升级前自动写入备份区并迁移。","迁移异常时优先尝试最近备份恢复。"]]],"n":"提示：避免长期在隐私模式使用，清理浏览器存储会导致数据丢失。"};
 
 const FRIDGE_THEME_OPTIONS = [
-  {
-    id: "arctic",
-    preview: "#7cc5b5",
-    labels: { zh: "极地银", en: "Arctic", ja: "アークティック", de: "Arktis", fr: "Arctique", es: "Ártico", it: "Artico" },
-  },
-  {
-    id: "mint",
-    preview: "#58b894",
-    labels: { zh: "薄荷绿", en: "Mint", ja: "ミント", de: "Minze", fr: "Menthe", es: "Menta", it: "Menta" },
-  },
-  {
-    id: "pearl",
-    preview: "#c8ddd5",
-    labels: { zh: "珍珠白", en: "Pearl", ja: "パール", de: "Perlweiß", fr: "Perle", es: "Perla", it: "Perla" },
-  },
-  {
-    id: "sunset",
-    preview: "#d8a873",
-    labels: { zh: "暖杏橙", en: "Sunset", ja: "サンセット", de: "Sonnenuntergang", fr: "Coucher de soleil", es: "Atardecer", it: "Tramonto" },
-  },
-  {
-    id: "rose",
-    preview: "#d39ab6",
-    labels: { zh: "雾粉", en: "Rose", ja: "ローズ", de: "Rosa", fr: "Rose", es: "Rosa", it: "Rosa" },
-  },
-  {
-    id: "graphite",
-    preview: "#7a948d",
-    labels: { zh: "石墨灰", en: "Graphite", ja: "グラファイト", de: "Graphit", fr: "Graphite", es: "Grafito", it: "Grafite" },
-  },
+  { id: "arctic", preview: "#7cc5b5", label: "极地银" },
+  { id: "mint", preview: "#58b894", label: "薄荷绿" },
+  { id: "pearl", preview: "#c8ddd5", label: "珍珠白" },
+  { id: "sunset", preview: "#d8a873", label: "暖杏橙" },
+  { id: "rose", preview: "#d39ab6", label: "雾粉" },
+  { id: "graphite", preview: "#7a948d", label: "石墨灰" },
 ];
 
 const DEFAULT_FRIDGE_THEME = "arctic";
 
 const I18N = {
-  zh: {
-    app_title: "RAVIS-冰箱助手",
-    app_subtitle: "图标化操作 + 弹出式编辑卡片，减少界面噪音，专注“先处理临期食材”。",
-    locale_label: "语言",
-    fleet_title: "我的冰箱",
-    btn_add: "新增",
-    btn_edit: "编辑",
-    audit_title: "每日检查",
-    audit_complete: "完成今日检查",
-    risk_title: "保鲜概览",
-    rescue_title: "近期优先食材",
-    ideas_title: "用餐建议",
-    quick_actions_title: "快捷操作",
-    btn_create_zone: "新增分区",
-    btn_edit_zone: "编辑分区",
-    btn_add_item: "新增食材",
-    btn_library: "食材库",
-    btn_manual: "使用手册",
-    btn_export_txt: "导出TXT清单",
-    zone_items_title: "当前分区食材",
-    ledger_title: "使用记录（近30天）",
-    modal_create_fridge_title: "新增冰箱",
-    modal_edit_fridge_title: "编辑当前冰箱",
-    modal_create_zone_title: "新增分区",
-    modal_edit_zone_title: "编辑当前分区",
-    modal_library_title: "食材库管理",
-    modal_manual_title: "使用手册 / Manual",
-    modal_item_title: "食材编辑卡",
-    toggle_close_door: "关闭冰箱门",
-    toggle_open_door: "打开冰箱门",
-    kpi_items: "食材",
-    kpi_rescue: "临期",
-    kpi_expired: "过期",
-    kpi_wasted_30: "30天丢弃",
-    empty_no_fridge: "暂无冰箱，请先创建。",
-    empty_no_zone: "暂无分区。",
-    empty_no_idea: "暂无建议。",
-    empty_no_log: "暂无记录。",
-    label_other: "其他",
-    label_default: "默认",
-    label_day: "天",
-    manual_intro: "从“先处理临期”开始，用最少步骤管理冰箱。",
-    export_title: "冰箱库存打印清单",
-    export_generated_at: "导出时间",
-    export_no_data: "暂无可导出的库存数据。",
-    export_done: "TXT清单已导出。",
-    export_fridge: "冰箱",
-    export_zone: "分区",
-    export_items: "食材数",
-    export_empty_zone: "该分区暂无食材",
-    locale_option_zh: "简体中文",
-    locale_option_en: "English",
-    locale_option_ja: "日本語",
-    locale_option_de: "Deutsch",
-    locale_option_fr: "Français",
-    locale_option_es: "Español",
-    locale_option_it: "Italiano",
-  },
-  en: {
-    app_title: "RAVIS Fridge Assistant",
-    app_subtitle: "Icon-first actions with popup cards. Keep the interface calm and prioritize near-expiry items.",
-    locale_label: "Language",
-    fleet_title: "My Fridges",
-    btn_add: "Add",
-    btn_edit: "Edit",
-    audit_title: "Daily Check",
-    audit_complete: "Complete Today's Check",
-    risk_title: "Freshness Overview",
-    rescue_title: "Priority Items",
-    ideas_title: "Meal Ideas",
-    quick_actions_title: "Quick Actions",
-    btn_create_zone: "Add Zone",
-    btn_edit_zone: "Edit Zone",
-    btn_add_item: "Add Item",
-    btn_library: "Library",
-    btn_manual: "Manual",
-    btn_export_txt: "Export TXT List",
-    zone_items_title: "Items In Current Zone",
-    ledger_title: "Usage Log (Last 30 Days)",
-    modal_create_fridge_title: "Create Fridge",
-    modal_edit_fridge_title: "Edit Fridge",
-    modal_create_zone_title: "Create Zone",
-    modal_edit_zone_title: "Edit Zone",
-    modal_library_title: "Ingredient Library",
-    modal_manual_title: "Manual / 使用手册",
-    modal_item_title: "Item Card",
-    toggle_close_door: "Close Door",
-    toggle_open_door: "Open Door",
-    kpi_items: "Items",
-    kpi_rescue: "Rescue",
-    kpi_expired: "Expired",
-    kpi_wasted_30: "Wasted/30d",
-    empty_no_fridge: "No fridges yet. Create one first.",
-    empty_no_zone: "No zones yet.",
-    empty_no_idea: "No suggestions yet.",
-    empty_no_log: "No records yet.",
-    label_other: "Other",
-    label_default: "Default",
-    label_day: "days",
-    manual_intro: "Start with near-expiry first and manage fridge stock with minimal steps.",
-    export_title: "Printable Fridge Inventory",
-    export_generated_at: "Generated At",
-    export_no_data: "No inventory data to export.",
-    export_done: "TXT list exported.",
-    export_fridge: "Fridge",
-    export_zone: "Zone",
-    export_items: "Items",
-    export_empty_zone: "No items in this zone",
-    locale_option_zh: "简体中文",
-    locale_option_en: "English",
-    locale_option_ja: "日本語",
-    locale_option_de: "Deutsch",
-    locale_option_fr: "Français",
-    locale_option_es: "Español",
-    locale_option_it: "Italiano",
-  },
-  ja: {
-    app_title: "RAVIS 冷蔵庫アシスタント",
-    app_subtitle: "アイコン中心の操作とポップアップ編集で、情報量を抑えつつ期限間近の食材を優先管理します。",
-    locale_label: "言語",
-    fleet_title: "冷蔵庫一覧",
-    btn_add: "追加",
-    btn_edit: "編集",
-    audit_title: "デイリーチェック",
-    audit_complete: "本日のチェック完了",
-    risk_title: "鮮度ダッシュボード",
-    rescue_title: "優先消費アイテム",
-    ideas_title: "献立提案",
-    quick_actions_title: "クイック操作",
-    btn_create_zone: "区画追加",
-    btn_edit_zone: "区画編集",
-    btn_add_item: "食材追加",
-    btn_library: "食材ライブラリ",
-    btn_manual: "マニュアル",
-    btn_export_txt: "TXT書き出し",
-    zone_items_title: "選択中区画の食材",
-    ledger_title: "利用履歴（直近30日）",
-    modal_create_fridge_title: "冷蔵庫を作成",
-    modal_edit_fridge_title: "冷蔵庫を編集",
-    modal_create_zone_title: "区画を作成",
-    modal_edit_zone_title: "区画を編集",
-    modal_library_title: "食材ライブラリ管理",
-    modal_manual_title: "マニュアル / 使用手册",
-    modal_item_title: "食材カード",
-    toggle_close_door: "ドアを閉める",
-    toggle_open_door: "ドアを開ける",
-    kpi_items: "食材",
-    kpi_rescue: "優先",
-    kpi_expired: "期限切れ",
-    kpi_wasted_30: "30日廃棄",
-    empty_no_fridge: "冷蔵庫がありません。先に作成してください。",
-    empty_no_zone: "区画がありません。",
-    empty_no_idea: "提案はまだありません。",
-    empty_no_log: "記録はまだありません。",
-    label_other: "その他",
-    label_default: "標準",
-    label_day: "日",
-    manual_intro: "期限が近い食材から処理し、最小ステップで在庫管理しましょう。",
-    export_title: "印刷用在庫リスト",
-    export_generated_at: "出力日時",
-    export_no_data: "出力できる在庫データがありません。",
-    export_done: "TXTリストを出力しました。",
-    export_fridge: "冷蔵庫",
-    export_zone: "区画",
-    export_items: "食材数",
-    export_empty_zone: "この区画に食材はありません",
-    locale_option_zh: "简体中文",
-    locale_option_en: "English",
-    locale_option_ja: "日本語",
-    locale_option_de: "Deutsch",
-    locale_option_fr: "Français",
-    locale_option_es: "Español",
-    locale_option_it: "Italiano",
-  },
-  de: {
-    app_title: "RAVIS Kühlschrank-Assistent",
-    app_subtitle: "Icon-zentrierte Bedienung mit Popup-Karten. Fokus auf Lebensmittel mit kurzer Restlaufzeit.",
-    locale_label: "Sprache",
-    fleet_title: "Meine Kühlschränke",
-    btn_add: "Hinzufügen",
-    btn_edit: "Bearbeiten",
-    audit_title: "Täglicher Check",
-    audit_complete: "Heutigen Check abschließen",
-    risk_title: "Frische-Übersicht",
-    rescue_title: "Priorisierte Lebensmittel",
-    ideas_title: "Essensideen",
-    quick_actions_title: "Schnellaktionen",
-    btn_create_zone: "Bereich hinzufügen",
-    btn_edit_zone: "Bereich bearbeiten",
-    btn_add_item: "Lebensmittel hinzufügen",
-    btn_library: "Bibliothek",
-    btn_manual: "Handbuch",
-    btn_export_txt: "TXT exportieren",
-    zone_items_title: "Artikel im Bereich",
-    ledger_title: "Verlauf (30 Tage)",
-    modal_create_fridge_title: "Kühlschrank erstellen",
-    modal_edit_fridge_title: "Kühlschrank bearbeiten",
-    modal_create_zone_title: "Bereich erstellen",
-    modal_edit_zone_title: "Bereich bearbeiten",
-    modal_library_title: "Lebensmittelbibliothek",
-    modal_manual_title: "Handbuch",
-    modal_item_title: "Lebensmittelkarte",
-    toggle_close_door: "Tür schließen",
-    toggle_open_door: "Tür öffnen",
-    kpi_items: "Artikel",
-    kpi_rescue: "Priorität",
-    kpi_expired: "Abgelaufen",
-    kpi_wasted_30: "Entsorgt/30T",
-    empty_no_fridge: "Noch kein Kühlschrank. Bitte zuerst erstellen.",
-    empty_no_zone: "Noch keine Bereiche.",
-    empty_no_idea: "Noch keine Vorschläge.",
-    empty_no_log: "Noch keine Einträge.",
-    label_other: "Andere",
-    label_default: "Standard",
-    label_day: "Tage",
-    manual_intro: "Beginne mit bald ablaufenden Lebensmitteln und halte den Ablauf einfach.",
-    export_title: "Druckbare Inventarliste",
-    export_generated_at: "Erstellt am",
-    export_no_data: "Keine Bestandsdaten zum Exportieren.",
-    export_done: "TXT-Liste exportiert.",
-    export_fridge: "Kühlschrank",
-    export_zone: "Bereich",
-    export_items: "Artikel",
-    export_empty_zone: "Keine Artikel in diesem Bereich",
-    locale_option_zh: "简体中文",
-    locale_option_en: "English",
-    locale_option_ja: "日本語",
-    locale_option_de: "Deutsch",
-    locale_option_fr: "Français",
-    locale_option_es: "Español",
-    locale_option_it: "Italiano",
-  },
-  fr: {
-    app_title: "Assistant Frigo RAVIS",
-    app_subtitle: "Actions par icônes et cartes popup. Priorisez les aliments proches de la date limite.",
-    locale_label: "Langue",
-    fleet_title: "Mes frigos",
-    btn_add: "Ajouter",
-    btn_edit: "Modifier",
-    audit_title: "Contrôle quotidien",
-    audit_complete: "Valider le contrôle du jour",
-    risk_title: "Vue fraîcheur",
-    rescue_title: "Aliments prioritaires",
-    ideas_title: "Idées de repas",
-    quick_actions_title: "Actions rapides",
-    btn_create_zone: "Ajouter une zone",
-    btn_edit_zone: "Modifier la zone",
-    btn_add_item: "Ajouter un aliment",
-    btn_library: "Bibliothèque",
-    btn_manual: "Manuel",
-    btn_export_txt: "Exporter TXT",
-    zone_items_title: "Aliments de la zone",
-    ledger_title: "Historique (30 jours)",
-    modal_create_fridge_title: "Créer un frigo",
-    modal_edit_fridge_title: "Modifier le frigo",
-    modal_create_zone_title: "Créer une zone",
-    modal_edit_zone_title: "Modifier la zone",
-    modal_library_title: "Bibliothèque d'ingrédients",
-    modal_manual_title: "Manuel",
-    modal_item_title: "Fiche aliment",
-    toggle_close_door: "Fermer la porte",
-    toggle_open_door: "Ouvrir la porte",
-    kpi_items: "Aliments",
-    kpi_rescue: "Priorité",
-    kpi_expired: "Périmés",
-    kpi_wasted_30: "Jetés/30j",
-    empty_no_fridge: "Aucun frigo pour l'instant.",
-    empty_no_zone: "Aucune zone pour l'instant.",
-    empty_no_idea: "Aucune suggestion pour l'instant.",
-    empty_no_log: "Aucun enregistrement.",
-    label_other: "Autre",
-    label_default: "Par défaut",
-    label_day: "jours",
-    manual_intro: "Commencez par les aliments proches de la date limite avec un flux simple.",
-    export_title: "Liste d'inventaire imprimable",
-    export_generated_at: "Date d'export",
-    export_no_data: "Aucune donnée à exporter.",
-    export_done: "Liste TXT exportée.",
-    export_fridge: "Frigo",
-    export_zone: "Zone",
-    export_items: "Articles",
-    export_empty_zone: "Aucun aliment dans cette zone",
-    locale_option_zh: "简体中文",
-    locale_option_en: "English",
-    locale_option_ja: "日本語",
-    locale_option_de: "Deutsch",
-    locale_option_fr: "Français",
-    locale_option_es: "Español",
-    locale_option_it: "Italiano",
-  },
-  es: {
-    app_title: "Asistente de Nevera RAVIS",
-    app_subtitle: "Acciones por iconos y edición en tarjetas emergentes. Prioriza alimentos próximos a vencer.",
-    locale_label: "Idioma",
-    fleet_title: "Mis neveras",
-    btn_add: "Añadir",
-    btn_edit: "Editar",
-    audit_title: "Revisión diaria",
-    audit_complete: "Completar revisión de hoy",
-    risk_title: "Resumen de frescura",
-    rescue_title: "Alimentos prioritarios",
-    ideas_title: "Ideas de comida",
-    quick_actions_title: "Acciones rápidas",
-    btn_create_zone: "Añadir zona",
-    btn_edit_zone: "Editar zona",
-    btn_add_item: "Añadir alimento",
-    btn_library: "Biblioteca",
-    btn_manual: "Manual",
-    btn_export_txt: "Exportar TXT",
-    zone_items_title: "Alimentos de la zona",
-    ledger_title: "Registro (30 días)",
-    modal_create_fridge_title: "Crear nevera",
-    modal_edit_fridge_title: "Editar nevera",
-    modal_create_zone_title: "Crear zona",
-    modal_edit_zone_title: "Editar zona",
-    modal_library_title: "Biblioteca de ingredientes",
-    modal_manual_title: "Manual",
-    modal_item_title: "Ficha de alimento",
-    toggle_close_door: "Cerrar puerta",
-    toggle_open_door: "Abrir puerta",
-    kpi_items: "Alimentos",
-    kpi_rescue: "Prioridad",
-    kpi_expired: "Caducados",
-    kpi_wasted_30: "Desecho/30d",
-    empty_no_fridge: "Aún no hay neveras.",
-    empty_no_zone: "Aún no hay zonas.",
-    empty_no_idea: "Aún no hay sugerencias.",
-    empty_no_log: "Sin registros.",
-    label_other: "Otro",
-    label_default: "Predeterminado",
-    label_day: "días",
-    manual_intro: "Empieza por los alimentos que vencen antes y mantén el flujo simple.",
-    export_title: "Lista imprimible de inventario",
-    export_generated_at: "Fecha de exportación",
-    export_no_data: "No hay datos para exportar.",
-    export_done: "Lista TXT exportada.",
-    export_fridge: "Nevera",
-    export_zone: "Zona",
-    export_items: "Alimentos",
-    export_empty_zone: "No hay alimentos en esta zona",
-    locale_option_zh: "简体中文",
-    locale_option_en: "English",
-    locale_option_ja: "日本語",
-    locale_option_de: "Deutsch",
-    locale_option_fr: "Français",
-    locale_option_es: "Español",
-    locale_option_it: "Italiano",
-  },
-  it: {
-    app_title: "Assistente Frigo RAVIS",
-    app_subtitle: "Azioni a icone con schede popup. Dai priorità ai cibi prossimi alla scadenza.",
-    locale_label: "Lingua",
-    fleet_title: "I miei frigoriferi",
-    btn_add: "Aggiungi",
-    btn_edit: "Modifica",
-    audit_title: "Controllo giornaliero",
-    audit_complete: "Completa controllo di oggi",
-    risk_title: "Panoramica freschezza",
-    rescue_title: "Alimenti prioritari",
-    ideas_title: "Idee pasto",
-    quick_actions_title: "Azioni rapide",
-    btn_create_zone: "Aggiungi reparto",
-    btn_edit_zone: "Modifica reparto",
-    btn_add_item: "Aggiungi alimento",
-    btn_library: "Libreria",
-    btn_manual: "Manuale",
-    btn_export_txt: "Esporta TXT",
-    zone_items_title: "Alimenti nel reparto",
-    ledger_title: "Registro (ultimi 30 giorni)",
-    modal_create_fridge_title: "Crea frigorifero",
-    modal_edit_fridge_title: "Modifica frigorifero",
-    modal_create_zone_title: "Crea reparto",
-    modal_edit_zone_title: "Modifica reparto",
-    modal_library_title: "Libreria ingredienti",
-    modal_manual_title: "Manuale",
-    modal_item_title: "Scheda alimento",
-    toggle_close_door: "Chiudi porta",
-    toggle_open_door: "Apri porta",
-    kpi_items: "Alimenti",
-    kpi_rescue: "Priorità",
-    kpi_expired: "Scaduti",
-    kpi_wasted_30: "Sprecati/30g",
-    empty_no_fridge: "Nessun frigorifero al momento.",
-    empty_no_zone: "Nessun reparto al momento.",
-    empty_no_idea: "Nessun suggerimento al momento.",
-    empty_no_log: "Nessun record.",
-    label_other: "Altro",
-    label_default: "Predefinito",
-    label_day: "giorni",
-    manual_intro: "Parti dagli alimenti in scadenza e mantieni il flusso essenziale.",
-    export_title: "Lista inventario stampabile",
-    export_generated_at: "Data esportazione",
-    export_no_data: "Nessun dato da esportare.",
-    export_done: "Lista TXT esportata.",
-    export_fridge: "Frigorifero",
-    export_zone: "Reparto",
-    export_items: "Alimenti",
-    export_empty_zone: "Nessun alimento in questo reparto",
-    locale_option_zh: "简体中文",
-    locale_option_en: "English",
-    locale_option_ja: "日本語",
-    locale_option_de: "Deutsch",
-    locale_option_fr: "Français",
-    locale_option_es: "Español",
-    locale_option_it: "Italiano",
-  },
+  zh: compactArrayToMap(I18N_TEXT_KEYS, DEFAULT_COMPACT_LOCALE_ZH.t),
 };
 
 const MANUAL_CONTENT = {
-  zh: {
-    sections: [
-      {
-        title: "1. 快速开始",
-        ordered: true,
-        items: ["新建冰箱并确认默认分区。", "点“新增食材”或从“食材库”快速引用。", "每天查看“近期优先食材”，优先处理临期条目。"],
-      },
-      {
-        title: "2. 核心操作",
-        ordered: false,
-        items: [
-          "分区支持选中、编辑，且仅在清空后删除。",
-          "食材可跨分区移动，状态可自动判断或手动覆盖。",
-          "支持语音录入食材名、单位、备注。",
-          "可切换冰箱颜色主题，便于多冰箱辨识。",
-        ],
-      },
-      {
-        title: "3. 数据安全",
-        ordered: false,
-        items: ["数据存储在本机浏览器 localStorage。", "版本升级前自动写入备份区并迁移。", "迁移异常时优先尝试最近备份恢复。"],
-      },
-    ],
-    note: "提示：避免长期在隐私模式使用，清理浏览器存储会导致数据丢失。",
-  },
-  en: {
-    sections: [
-      {
-        title: "1. Quick Start",
-        ordered: true,
-        items: [
-          "Create a fridge and confirm default zones.",
-          "Add items directly or apply from the ingredient library.",
-          "Review priority items daily and consume near-expiry food first.",
-        ],
-      },
-      {
-        title: "2. Core Actions",
-        ordered: false,
-        items: [
-          "Select and edit zones; deletion is allowed only when empty.",
-          "Move items across zones and override status when needed.",
-          "Voice input is available for name, unit, and notes.",
-          "Switch fridge themes for quick visual recognition.",
-        ],
-      },
-      {
-        title: "3. Data Safety",
-        ordered: false,
-        items: [
-          "All data is stored in browser localStorage.",
-          "Before upgrades, a backup snapshot is created automatically.",
-          "If migration fails, the app attempts recovery from recent backup.",
-        ],
-      },
-    ],
-    note: "Tip: avoid long-term use in private/incognito mode. Clearing browser storage removes data.",
-  },
-  ja: {
-    sections: [
-      {
-        title: "1. クイックスタート",
-        ordered: true,
-        items: ["冷蔵庫を作成し、初期区画を確認します。", "食材を追加するか、ライブラリから引用します。", "毎日優先リストを確認し、期限が近い食材から消費します。"],
-      },
-      {
-        title: "2. 主な操作",
-        ordered: false,
-        items: [
-          "区画は選択・編集可能で、空の場合のみ削除できます。",
-          "食材は区画間移動に対応し、状態は手動上書き可能です。",
-          "食材名・単位・メモは音声入力に対応しています。",
-          "冷蔵庫カラーを切り替えて視認性を高められます。",
-        ],
-      },
-      {
-        title: "3. データ保護",
-        ordered: false,
-        items: [
-          "データはブラウザの localStorage に保存されます。",
-          "アップグレード前に自動でバックアップ領域へ保存します。",
-          "移行失敗時は最新バックアップから復元を試みます。",
-        ],
-      },
-    ],
-    note: "ヒント: プライベートモードの長期利用は避けてください。ブラウザ保存領域の削除でデータは失われます。",
-  },
-  de: {
-    sections: [
-      {
-        title: "1. Schnellstart",
-        ordered: true,
-        items: [
-          "Kühlschrank anlegen und Standardbereiche prüfen.",
-          "Lebensmittel hinzufügen oder aus der Bibliothek übernehmen.",
-          "Täglich Prioritäten prüfen und bald ablaufende Lebensmittel zuerst nutzen.",
-        ],
-      },
-      {
-        title: "2. Kernfunktionen",
-        ordered: false,
-        items: [
-          "Bereiche auswählen und bearbeiten; Löschen nur im leeren Zustand.",
-          "Lebensmittel zwischen Bereichen verschieben und Status manuell setzen.",
-          "Spracheingabe für Name, Einheit und Notizen verfügbar.",
-          "Farbschema des Kühlschranks für bessere Übersicht wechseln.",
-        ],
-      },
-      {
-        title: "3. Datensicherheit",
-        ordered: false,
-        items: [
-          "Daten werden lokal in localStorage gespeichert.",
-          "Vor jedem Versionswechsel wird ein Backup erstellt.",
-          "Bei Fehlern versucht die App die Wiederherstellung aus dem Backup.",
-        ],
-      },
-    ],
-    note: "Hinweis: Im Inkognito-Modus nicht langfristig nutzen. Beim Löschen des Browser-Speichers gehen Daten verloren.",
-  },
-  fr: {
-    sections: [
-      {
-        title: "1. Démarrage rapide",
-        ordered: true,
-        items: [
-          "Créez un frigo et vérifiez les zones par défaut.",
-          "Ajoutez des aliments ou appliquez un modèle depuis la bibliothèque.",
-          "Consultez chaque jour la liste prioritaire et traitez les produits proches de la date.",
-        ],
-      },
-      {
-        title: "2. Actions clés",
-        ordered: false,
-        items: [
-          "Sélection et modification des zones; suppression uniquement si vide.",
-          "Déplacement d'aliments entre zones avec statut manuel possible.",
-          "Saisie vocale pour nom, unité et note.",
-          "Changement de couleur du frigo pour distinguer plusieurs appareils.",
-        ],
-      },
-      {
-        title: "3. Sécurité des données",
-        ordered: false,
-        items: [
-          "Les données sont stockées localement dans localStorage.",
-          "Une sauvegarde est créée avant migration de version.",
-          "En cas d'erreur, l'application tente une restauration récente.",
-        ],
-      },
-    ],
-    note: "Conseil: évitez l'usage prolongé en navigation privée. La suppression du stockage navigateur efface les données.",
-  },
-  es: {
-    sections: [
-      {
-        title: "1. Inicio rápido",
-        ordered: true,
-        items: [
-          "Crea una nevera y revisa las zonas iniciales.",
-          "Añade alimentos o aplica plantillas desde la biblioteca.",
-          "Revisa la lista prioritaria cada día y consume primero lo próximo a vencer.",
-        ],
-      },
-      {
-        title: "2. Operaciones clave",
-        ordered: false,
-        items: [
-          "Selecciona y edita zonas; solo se eliminan cuando están vacías.",
-          "Mueve alimentos entre zonas y ajusta estado manualmente.",
-          "Entrada por voz para nombre, unidad y notas.",
-          "Cambia el color de la nevera para identificarla rápido.",
-        ],
-      },
-      {
-        title: "3. Seguridad de datos",
-        ordered: false,
-        items: [
-          "Los datos se guardan localmente en localStorage.",
-          "Antes de cada actualización se crea una copia de seguridad.",
-          "Si la migración falla, la app intenta restaurar desde copia reciente.",
-        ],
-      },
-    ],
-    note: "Consejo: evita usar modo incógnito a largo plazo. Borrar almacenamiento del navegador elimina los datos.",
-  },
-  it: {
-    sections: [
-      {
-        title: "1. Avvio rapido",
-        ordered: true,
-        items: [
-          "Crea il frigorifero e verifica i reparti iniziali.",
-          "Aggiungi alimenti o usa i modelli dalla libreria.",
-          "Controlla ogni giorno la lista prioritaria e consuma prima le scadenze vicine.",
-        ],
-      },
-      {
-        title: "2. Funzioni principali",
-        ordered: false,
-        items: [
-          "Seleziona e modifica reparti; eliminazione solo se vuoti.",
-          "Sposta alimenti tra reparti e imposta lo stato manualmente.",
-          "Input vocale per nome, unità e note.",
-          "Cambia colore del frigorifero per riconoscerlo subito.",
-        ],
-      },
-      {
-        title: "3. Sicurezza dati",
-        ordered: false,
-        items: [
-          "I dati sono salvati localmente in localStorage.",
-          "Prima di ogni upgrade viene creato un backup automatico.",
-          "In caso di errore la app tenta il ripristino dal backup recente.",
-        ],
-      },
-    ],
-    note: "Suggerimento: evita l'uso prolungato in modalità privata. La pulizia dello storage browser cancella i dati.",
-  },
+  zh: compactManualToObject(DEFAULT_COMPACT_LOCALE_ZH.m, DEFAULT_COMPACT_LOCALE_ZH.n),
 };
+
+const ZONE_TYPE_LABEL = {
+  zh: compactArrayToMap(ZONE_TYPE_KEYS, DEFAULT_COMPACT_LOCALE_ZH.z),
+};
+
+const CATEGORY_LABEL = {
+  zh: compactArrayToMap(CATEGORY_KEYS, DEFAULT_COMPACT_LOCALE_ZH.c),
+};
+
+const STATUS_LABEL = {
+  zh: compactArrayToMap(STATUS_KEYS, DEFAULT_COMPACT_LOCALE_ZH.s),
+};
+
+const FRIDGE_THEME_LABELS = {
+  zh: compactArrayToMap(THEME_KEYS, DEFAULT_COMPACT_LOCALE_ZH.th),
+};
+
+const LOCALE_PACK_CACHE = {
+  zh: true,
+};
+
+const LOCALE_PACK_LOADING = Object.create(null);
 
 const DEFAULT_ZONE_TEMPLATES = [
   { name: "蔬菜抽屉", type: "vegetable", capacity: 20 },
@@ -956,6 +217,7 @@ const ui = {
   recordingButton: null,
   libraryQueryTimer: null,
   deferredSaveTimer: null,
+  sectionObserver: null,
   activeModalId: null,
   lastFocusedElement: null,
   startupNotice: "",
@@ -966,6 +228,8 @@ const ui = {
 const els = {
   appTitle: document.getElementById("appTitle"),
   appSubtitle: document.getElementById("appSubtitle"),
+  sectionNavigator: document.getElementById("sectionNavigator"),
+  mobileDock: document.getElementById("mobileDock"),
   localeLabel: document.getElementById("localeLabel"),
   localeSwitcher: document.getElementById("localeSwitcher"),
   openCreateFridgeModalBtn: document.getElementById("openCreateFridgeModalBtn"),
@@ -1083,14 +347,30 @@ let state = loadState();
 
 bindEvents();
 setupSpeechRecognition();
-applyLocaleToUI();
-ensureSelectionIntegrity();
-resetItemForm();
-render();
-runStartupSafetyFlow();
+bootstrapApp();
+
+async function bootstrapApp() {
+  const loaded = await ensureLocalePackLoaded(getCurrentLocale());
+  if (!loaded) {
+    ui.locale = DEFAULT_LOCALE;
+    persistPreferredLocale(DEFAULT_LOCALE);
+  }
+  applyLocaleToUI();
+  ensureSelectionIntegrity();
+  resetItemForm();
+  render();
+  setupNavigatorObserver();
+  runStartupSafetyFlow();
+}
 
 function bindEvents() {
   els.localeSwitcher.addEventListener("change", onLocaleChange);
+  if (els.sectionNavigator) {
+    els.sectionNavigator.addEventListener("click", onNavigatorAction);
+  }
+  if (els.mobileDock) {
+    els.mobileDock.addEventListener("click", onNavigatorAction);
+  }
   els.openCreateFridgeModalBtn.addEventListener("click", () => openModal("createFridge"));
   els.openEditFridgeModalBtn.addEventListener("click", () => openModal("editFridge"));
   els.openCreateZoneModalBtn.addEventListener("click", () => openModal("createZone"));
@@ -1154,6 +434,77 @@ function onGlobalKeydown(event) {
   }
 }
 
+function onNavigatorAction(event) {
+  const button = event.target.closest("[data-nav-target], [data-nav-action]");
+  if (!button) return;
+
+  const navAction = cleanText(button.getAttribute("data-nav-action"));
+  if (navAction === "open-item-modal") {
+    openModal("item");
+    return;
+  }
+
+  const targetId = cleanText(button.getAttribute("data-nav-target"));
+  if (!targetId) return;
+  const target = document.getElementById(targetId);
+  if (!target) return;
+
+  if (target instanceof HTMLDetailsElement) {
+    target.open = true;
+  }
+
+  const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  target.scrollIntoView({
+    behavior: prefersReducedMotion ? "auto" : "smooth",
+    block: "start",
+  });
+
+  setNavigatorActive(targetId);
+}
+
+function setNavigatorActive(targetId) {
+  const normalized = cleanText(targetId);
+  if (!normalized) return;
+
+  const navButtons = document.querySelectorAll(".nav-chip[data-nav-target], .mobile-dock-btn[data-nav-target]");
+  navButtons.forEach((button) => {
+    const currentTarget = cleanText(button.getAttribute("data-nav-target"));
+    button.classList.toggle("active", currentTarget === normalized);
+  });
+}
+
+function setupNavigatorObserver() {
+  if (typeof IntersectionObserver !== "function") return;
+  if (ui.sectionObserver) {
+    ui.sectionObserver.disconnect();
+    ui.sectionObserver = null;
+  }
+
+  const trackIds = ["overviewSection", "fridgeSection", "rescueSection", "zoneItemsPanel", "fleetSection"];
+  const targets = trackIds.map((id) => document.getElementById(id)).filter(Boolean);
+  if (!targets.length) return;
+
+  ui.sectionObserver = new IntersectionObserver(
+    (entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+      if (!visible.length) return;
+      const candidate = visible[0].target;
+      if (candidate?.id) {
+        setNavigatorActive(candidate.id);
+      }
+    },
+    {
+      root: null,
+      rootMargin: "-28% 0px -52% 0px",
+      threshold: [0.08, 0.22, 0.4, 0.6],
+    }
+  );
+
+  targets.forEach((target) => ui.sectionObserver.observe(target));
+}
+
 function scheduleDeferredSaveState(delayMs = 180) {
   const delay = clamp(Math.round(toNumber(delayMs, 180)), 16, 2000);
   if (ui.deferredSaveTimer) {
@@ -1211,6 +562,81 @@ function getCurrentLocale() {
   return normalizeLocale(ui.locale);
 }
 
+function localeBundleFromCompact(payload) {
+  if (!payload || payload.v !== 1) return null;
+  return {
+    text: compactArrayToMap(I18N_TEXT_KEYS, payload.t),
+    zone: compactArrayToMap(ZONE_TYPE_KEYS, payload.z),
+    category: compactArrayToMap(CATEGORY_KEYS, payload.c),
+    status: compactArrayToMap(STATUS_KEYS, payload.s),
+    theme: compactArrayToMap(THEME_KEYS, payload.th),
+    manual: compactManualToObject(payload.m, payload.n),
+  };
+}
+
+function applyLocaleBundle(locale, bundle) {
+  if (!bundle || !locale) return;
+  I18N[locale] = bundle.text;
+  ZONE_TYPE_LABEL[locale] = bundle.zone;
+  CATEGORY_LABEL[locale] = bundle.category;
+  STATUS_LABEL[locale] = bundle.status;
+  FRIDGE_THEME_LABELS[locale] = bundle.theme;
+  MANUAL_CONTENT[locale] = bundle.manual;
+  LOCALE_PACK_CACHE[locale] = true;
+}
+
+async function fetchLocalePack(locale) {
+  if (typeof fetch !== "function") {
+    throw new Error("Fetch API unavailable.");
+  }
+
+  const controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+  const timer = controller
+    ? setTimeout(() => {
+        controller.abort();
+      }, LOCALE_FETCH_TIMEOUT_MS)
+    : null;
+
+  try {
+    const response = await fetch(`${LOCALE_FILE_BASE}/${locale}.json`, {
+      cache: "force-cache",
+      signal: controller?.signal,
+    });
+    if (!response.ok) {
+      throw new Error(`Locale pack request failed: ${response.status}`);
+    }
+    const payload = await response.json();
+    const bundle = localeBundleFromCompact(payload);
+    if (!bundle) {
+      throw new Error("Locale pack has invalid shape.");
+    }
+    return bundle;
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
+async function ensureLocalePackLoaded(locale) {
+  const target = normalizeLocale(locale);
+  if (LOCALE_PACK_CACHE[target]) return true;
+  if (LOCALE_PACK_LOADING[target]) return LOCALE_PACK_LOADING[target];
+
+  LOCALE_PACK_LOADING[target] = fetchLocalePack(target)
+    .then((bundle) => {
+      applyLocaleBundle(target, bundle);
+      return true;
+    })
+    .catch((err) => {
+      console.warn(`[locale] Failed to load locale pack "${target}":`, err);
+      return false;
+    })
+    .finally(() => {
+      delete LOCALE_PACK_LOADING[target];
+    });
+
+  return LOCALE_PACK_LOADING[target];
+}
+
 function t(key, fallback = "") {
   const locale = getCurrentLocale();
   return I18N[locale]?.[key] || I18N.en?.[key] || I18N.zh?.[key] || fallback || key;
@@ -1235,14 +661,24 @@ function statusLabel(status) {
 
 function themeLabel(theme) {
   if (!theme) return "";
-  return theme.labels?.[getCurrentLocale()] || theme.labels?.en || theme.labels?.zh || theme.id;
+  return localizedMapValue(FRIDGE_THEME_LABELS, theme.id, theme.label || theme.id);
 }
 
-function onLocaleChange(event) {
+async function onLocaleChange(event) {
   const nextLocale = normalizeLocale(event.target.value);
   if (nextLocale === ui.locale) return;
+
   ui.locale = nextLocale;
   persistPreferredLocale(nextLocale);
+  els.localeSwitcher.disabled = true;
+
+  const loaded = await ensureLocalePackLoaded(nextLocale);
+  els.localeSwitcher.disabled = false;
+  if (!loaded) {
+    ui.locale = DEFAULT_LOCALE;
+    persistPreferredLocale(DEFAULT_LOCALE);
+  }
+
   applyLocaleToUI();
   render();
 }

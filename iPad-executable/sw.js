@@ -1,11 +1,17 @@
 "use strict";
 
-const CACHE_VERSION = "homeassistant-nova-ipad-v2";
+const CACHE_VERSION = "homeassistant-nova-ipad-v3";
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
-  "./icon.svg"
+  "./icon.svg",
+  "./locales/en.json",
+  "./locales/ja.json",
+  "./locales/de.json",
+  "./locales/fr.json",
+  "./locales/es.json",
+  "./locales/it.json"
 ];
 
 self.addEventListener("install", (event) => {

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#2dd4bf" />
     <title>RAVIS-冰箱助手</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -35,8 +37,43 @@
         </div>
       </header>
 
+      <nav id="sectionNavigator" class="section-nav panel" aria-label="页面导航">
+        <div class="nav-track">
+          <button type="button" class="nav-chip active" data-nav-target="overviewSection" aria-label="跳转到保鲜概览">
+            <span class="nav-chip-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 4h7v7H4V4Zm9 0h7v4h-7V4ZM4 13h4v7H4v-7Zm6 0h10v7H10v-7Z"/></svg>
+            </span>
+            <span>Overview</span>
+          </button>
+          <button type="button" class="nav-chip" data-nav-target="fridgeSection" aria-label="跳转到冰箱可视区">
+            <span class="nav-chip-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M7 2a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3H7Zm0 2h10a1 1 0 0 1 1 1v6H6V5a1 1 0 0 1 1-1Zm-1 9h12v6a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-6Z"/></svg>
+            </span>
+            <span>Fridge</span>
+          </button>
+          <button type="button" class="nav-chip" data-nav-target="rescueSection" aria-label="跳转到优先食材">
+            <span class="nav-chip-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3 2.3 8.4v7.2L12 21l9.7-5.4V8.4L12 3Zm-7.7 6.5L12 13.9l7.7-4.4L12 5.2 4.3 9.5Zm15.4 1.8L13 15.2v4.3l6.7-3.8v-4.4Zm-9.4 8.2v-4.3l-6.7-3.9v4.4l6.7 3.8Z"/></svg>
+            </span>
+            <span>Priority</span>
+          </button>
+          <button type="button" class="nav-chip" data-nav-target="zoneItemsPanel" aria-label="跳转到分区食材列表">
+            <span class="nav-chip-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2Zm-2 7h20v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7Zm5 2a1 1 0 1 0 0 2h10a1 1 0 1 0 0-2H7Z"/></svg>
+            </span>
+            <span>Zones</span>
+          </button>
+          <button type="button" class="nav-chip nav-chip-action" data-nav-action="open-item-modal" aria-label="快速添加食材">
+            <span class="nav-chip-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M6 2a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1v9a3 3 0 0 0 3 3h4a3 3 0 0 0 3-3v-9h1a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3H6Zm6 10a1 1 0 0 0-1 1v1h-1a1 1 0 1 0 0 2h1v1a1 1 0 1 0 2 0v-1h1a1 1 0 1 0 0-2h-1v-1a1 1 0 0 0-1-1Z"/></svg>
+            </span>
+            <span>Add Item</span>
+          </button>
+        </div>
+      </nav>
+
       <main id="mainContent" class="layout">
-        <aside class="panel left-panel" aria-label="Fridge fleet and routine">
+        <aside id="fleetSection" class="panel left-panel" aria-label="Fridge fleet and routine">
           <section class="panel-section">
             <div class="section-head-row">
               <h2 id="fleetTitle">我的冰箱</h2>
@@ -66,12 +103,12 @@
         </aside>
 
         <section class="center-col">
-          <section class="panel panel-section risk-panel">
+          <section id="overviewSection" class="panel panel-section risk-panel">
             <h2 id="riskTitle">保鲜概览</h2>
             <div id="riskOverview" class="risk-grid"></div>
           </section>
 
-          <section class="panel panel-section fridge-visual-panel">
+          <section id="fridgeSection" class="panel panel-section fridge-visual-panel">
             <div class="panel-head">
               <div>
                 <h2 id="fridgeTitle">我的冰箱</h2>
@@ -93,7 +130,7 @@
           </section>
 
           <div class="center-bottom">
-            <section class="panel panel-section">
+            <section id="rescueSection" class="panel panel-section">
               <h2 id="rescueTitle">近期优先食材</h2>
               <div id="rescueList" class="rescue-list"></div>
             </section>
@@ -104,7 +141,7 @@
           </div>
         </section>
 
-        <aside class="panel right-panel" aria-label="Execution panel">
+        <aside id="operationsSection" class="panel right-panel" aria-label="Execution panel">
           <section class="panel-section">
             <h2 id="quickActionsTitle">快捷操作</h2>
             <div class="operation-grid">
@@ -164,6 +201,33 @@
           </details>
         </aside>
       </main>
+
+      <nav id="mobileDock" class="mobile-dock" aria-label="移动快捷导航">
+        <button type="button" class="mobile-dock-btn active" data-nav-target="overviewSection" aria-label="保鲜概览">
+          <span class="mobile-dock-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 4h7v7H4V4Zm9 0h7v4h-7V4ZM4 13h4v7H4v-7Zm6 0h10v7H10v-7Z"/></svg>
+          </span>
+          <span>Overview</span>
+        </button>
+        <button type="button" class="mobile-dock-btn" data-nav-target="fridgeSection" aria-label="冰箱可视区">
+          <span class="mobile-dock-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M7 2a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3H7Zm-1 3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6H6V5Zm0 8h12v6a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-6Z"/></svg>
+          </span>
+          <span>Fridge</span>
+        </button>
+        <button type="button" class="mobile-dock-btn" data-nav-target="zoneItemsPanel" aria-label="分区食材">
+          <span class="mobile-dock-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2Zm-2 7h20v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7Z"/></svg>
+          </span>
+          <span>Zones</span>
+        </button>
+        <button type="button" class="mobile-dock-btn mobile-dock-btn-action" data-nav-action="open-item-modal" aria-label="添加食材">
+          <span class="mobile-dock-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3a1 1 0 0 1 1 1v7h7a1 1 0 1 1 0 2h-7v7a1 1 0 1 1-2 0v-7H4a1 1 0 1 1 0-2h7V4a1 1 0 0 1 1-1Z"/></svg>
+          </span>
+          <span>Add</span>
+        </button>
+      </nav>
     </div>
 
     <div id="modalRoot" class="modal-root hidden" aria-hidden="true">
