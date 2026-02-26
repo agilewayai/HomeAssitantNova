@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HomeAssistant-Nova 2.1</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#mainContent">跳到主要内容</a>
+    <div class="bg-halo" aria-hidden="true"></div>
+    <div class="bg-grain" aria-hidden="true"></div>
+
+    <div class="nova-app">
+      <header class="hero-head">
+        <div>
+          <h1>HomeAssistant-Nova 2.1</h1>
+          <p>图标化操作 + 弹出式编辑卡片，减少界面噪音，专注“先处理临期食材”。</p>
+        </div>
+        <div id="globalKpi" class="kpi-strip" aria-live="polite"></div>
+      </header>
+
+      <main id="mainContent" class="layout">
+        <aside class="panel left-panel" aria-label="Fridge fleet and routine">
+          <section class="panel-section">
+            <div class="section-head-row">
+              <h2>冰箱舰队</h2>
+              <div class="op-inline">
+                <button id="openCreateFridgeModalBtn" type="button" class="op-btn" aria-label="新增冰箱">
+                  <span class="op-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M7 2a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3H7Zm0 2h10a1 1 0 0 1 1 1v6H6V5a1 1 0 0 1 1-1Zm-1 9h12v6a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-6Zm6-9a1 1 0 0 0-1 1v2H9a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0V9h2a1 1 0 1 0 0-2h-2V5a1 1 0 0 0-1-1Z"/></svg>
+                  </span>
+                  <span>新增</span>
+                </button>
+                <button id="openEditFridgeModalBtn" type="button" class="op-btn" aria-label="编辑当前冰箱">
+                  <span class="op-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M15.73 3.15a3 3 0 0 1 4.24 4.24l-9.7 9.7a1 1 0 0 1-.45.26l-4 1a1 1 0 0 1-1.21-1.21l1-4a1 1 0 0 1 .26-.45l9.86-9.54ZM6.1 14.6l-.54 2.15 2.15-.54 8.9-8.9-1.6-1.6-8.9 8.9Z"/></svg>
+                  </span>
+                  <span>编辑</span>
+                </button>
+              </div>
+            </div>
+            <div id="fridgeFleet" class="fleet-list"></div>
+          </section>
+
+          <section class="panel-section">
+            <h3>每日巡检</h3>
+            <div id="auditCard" class="audit-card"></div>
+            <button id="completeAuditBtn" type="button" class="btn btn-secondary">完成今日巡检</button>
+          </section>
+        </aside>
+
+        <section class="center-col">
+          <section class="panel panel-section risk-panel">
+            <h2>新鲜度指挥台</h2>
+            <div id="riskOverview" class="risk-grid"></div>
+          </section>
+
+          <section class="panel panel-section fridge-visual-panel">
+            <div class="panel-head">
+              <div>
+                <h2 id="fridgeTitle">视觉冰箱</h2>
+                <p id="fridgeSubtitle">选择分区，优先处理即将过期食材。</p>
+              </div>
+              <button id="toggleDoorBtn" type="button" class="btn btn-secondary">关门模式</button>
+            </div>
+
+            <div class="fridge-stage">
+              <div id="fridgeCabinet" class="fridge-cabinet door-open" aria-live="polite">
+                <div class="fridge-door" aria-hidden="true">
+                  <div class="fridge-handle"></div>
+                </div>
+                <div class="fridge-core">
+                  <div id="zoneGrid" class="zone-grid"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div class="center-bottom">
+            <section class="panel panel-section">
+              <h2>48小时救援清单</h2>
+              <div id="rescueList" class="rescue-list"></div>
+            </section>
+            <section class="panel panel-section">
+              <h2>救援料理建议</h2>
+              <div id="ideaList" class="idea-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <aside class="panel right-panel" aria-label="Execution panel">
+          <section class="panel-section">
+            <h2>操作中心</h2>
+            <div class="operation-grid">
+              <button id="openCreateZoneModalBtn" type="button" class="op-btn op-btn-large" aria-label="新增分区">
+                <span class="op-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M3 6a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6Zm2 0v4a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1Zm8 0a3 3 0 0 1 3-3h2a1 1 0 1 1 0 2h-2a1 1 0 0 0-1 1v2a1 1 0 1 1-2 0V6Zm8 9a1 1 0 0 1-1 1h-2v2a1 1 0 1 1-2 0v-2h-2a1 1 0 1 1 0-2h2v-2a1 1 0 1 1 2 0v2h2a1 1 0 0 1 1 1ZM3 16a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v2a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-2Zm2 0v2a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1Z"/></svg>
+                </span>
+                <span>新增分区</span>
+              </button>
+
+              <button id="openEditZoneModalBtn" type="button" class="op-btn op-btn-large" aria-label="编辑当前分区">
+                <span class="op-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M4 5a3 3 0 0 1 3-3h7a1 1 0 1 1 0 2H7a1 1 0 0 0-1 1v3h3a1 1 0 1 1 0 2H6v3h3a1 1 0 1 1 0 2H6v4a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-7a1 1 0 1 1 2 0v7a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V5Zm11.32 1.9a3 3 0 0 1 4.24 0l.54.54a3 3 0 0 1 0 4.24l-4.68 4.68a1 1 0 0 1-.45.26l-2.46.62a1 1 0 0 1-1.21-1.21l.62-2.46a1 1 0 0 1 .26-.45l4.68-4.68Zm2.83 1.41a1 1 0 0 0-1.42 0l-4.48 4.48-.31 1.24 1.24-.31 4.48-4.48a1 1 0 0 0 0-1.42l-.51-.51Z"/></svg>
+                </span>
+                <span>编辑分区</span>
+              </button>
+
+              <button id="openAddItemModalBtn" type="button" class="op-btn op-btn-large" aria-label="新增食材">
+                <span class="op-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M6 2a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h1v9a3 3 0 0 0 3 3h4a3 3 0 0 0 3-3v-9h1a3 3 0 0 0 3-3V5a3 3 0 0 0-3-3H6Zm0 2h12a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm3 6h6v9a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-9Zm3 2a1 1 0 0 0-1 1v1h-1a1 1 0 1 0 0 2h1v1a1 1 0 1 0 2 0v-1h1a1 1 0 1 0 0-2h-1v-1a1 1 0 0 0-1-1Z"/></svg>
+                </span>
+                <span>新增食材</span>
+              </button>
+
+              <button id="openLibraryModalBtn" type="button" class="op-btn op-btn-large" aria-label="管理食材库">
+                <span class="op-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M4 4a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v2h3a2 2 0 0 1 2 2v10a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4Zm2 0v14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8h-3v1a1 1 0 1 1-2 0V4H6Zm14 9a1 1 0 0 1-1 1h-2v2a1 1 0 1 1-2 0v-2h-2a1 1 0 1 1 0-2h2V10a1 1 0 1 1 2 0v2h2a1 1 0 0 1 1 1Z"/></svg>
+                </span>
+                <span>食材库</span>
+              </button>
+            </div>
+          </section>
+
+          <details class="panel-section lite-disclosure">
+            <summary id="zoneItemsTitle">当前分区食材</summary>
+            <div id="zoneItemsList" class="item-list"></div>
+          </details>
+
+          <details class="panel-section lite-disclosure">
+            <summary>浪费账本（近30天）</summary>
+            <div id="ledgerSummary" class="ledger-summary"></div>
+            <div id="ledgerList" class="ledger-list"></div>
+          </details>
+        </aside>
+      </main>
+    </div>
+
+    <div id="modalRoot" class="modal-root hidden" aria-hidden="true">
+      <div class="modal-backdrop" data-modal-close></div>
+      <div class="modal-stack" role="dialog" aria-modal="true" aria-label="编辑卡片">
+        <section id="modalCreateFridge" class="modal-card hidden">
+          <header class="modal-head">
+            <h3>新增冰箱</h3>
+            <button type="button" class="modal-close" data-modal-close aria-label="关闭">
+              <svg viewBox="0 0 24 24"><path d="M6.7 5.3a1 1 0 0 0-1.4 1.4L10.6 12l-5.3 5.3a1 1 0 0 0 1.4 1.4l5.3-5.3 5.3 5.3a1 1 0 1 0 1.4-1.4L13.4 12l5.3-5.3a1 1 0 0 0-1.4-1.4L12 10.6 6.7 5.3Z"/></svg>
+            </button>
+          </header>
+          <form id="createFridgeForm" class="form-grid">
+            <div class="field">
+              <label for="createFridgeName">冰箱名称</label>
+              <div class="voice-wrap">
+                <input id="createFridgeName" name="createFridgeName" type="text" required maxlength="60" placeholder="主厨房冰箱" />
+                <button type="button" class="voice-btn" data-voice-target="createFridgeName" aria-label="语音输入冰箱名称" aria-pressed="false">
+                  <svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 1 0 6 0V6a3 3 0 0 0-3-3Zm-7 8a1 1 0 1 0-2 0 9 9 0 0 0 8 8.94V22H8a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-2.06A9 9 0 0 0 21 11a1 1 0 1 0-2 0 7 7 0 1 1-14 0Z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="field">
+              <label for="createFridgeLocation">位置</label>
+              <div class="voice-wrap">
+                <input id="createFridgeLocation" name="createFridgeLocation" type="text" maxlength="60" placeholder="厨房 / 办公室 / 地下室" />
+                <button type="button" class="voice-btn" data-voice-target="createFridgeLocation" aria-label="语音输入冰箱位置" aria-pressed="false">
+                  <svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 1 0 6 0V6a3 3 0 0 0-3-3Zm-7 8a1 1 0 1 0-2 0 9 9 0 0 0 8 8.94V22H8a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-2.06A9 9 0 0 0 21 11a1 1 0 1 0-2 0 7 7 0 1 1-14 0Z"/></svg>
+                </button>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">创建冰箱</button>
+          </form>
+        </section>
+
+        <section id="modalEditFridge" class="modal-card hidden">
+          <header class="modal-head">
+            <h3>编辑当前冰箱</h3>
+            <button type="button" class="modal-close" data-modal-close aria-label="关闭">
+              <svg viewBox="0 0 24 24"><path d="M6.7 5.3a1 1 0 0 0-1.4 1.4L10.6 12l-5.3 5.3a1 1 0 0 0 1.4 1.4l5.3-5.3 5.3 5.3a1 1 0 1 0 1.4-1.4L13.4 12l5.3-5.3a1 1 0 0 0-1.4-1.4L12 10.6 6.7 5.3Z"/></svg>
+            </button>
+          </header>
+          <form id="activeFridgeForm" class="form-grid">
+            <div class="field">
+              <label for="activeFridgeName">名称</label>
+              <div class="voice-wrap">
+                <input id="activeFridgeName" name="activeFridgeName" type="text" required maxlength="60" />
+                <button type="button" class="voice-btn" data-voice-target="activeFridgeName" aria-label="语音输入当前冰箱名称" aria-pressed="false">
+                  <svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 1 0 6 0V6a3 3 0 0 0-3-3Zm-7 8a1 1 0 1 0-2 0 9 9 0 0 0 8 8.94V22H8a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-2.06A9 9 0 0 0 21 11a1 1 0 1 0-2 0 7 7 0 1 1-14 0Z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="field">
+              <label for="activeFridgeLocation">位置</label>
+              <div class="voice-wrap">
+                <input id="activeFridgeLocation" name="activeFridgeLocation" type="text" maxlength="60" />
+                <button type="button" class="voice-btn" data-voice-target="activeFridgeLocation" aria-label="语音输入当前冰箱位置" aria-pressed="false">
+                  <svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 1 0 6 0V6a3 3 0 0 0-3-3Zm-7 8a1 1 0 1 0-2 0 9 9 0 0 0 8 8.94V22H8a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-2.06A9 9 0 0 0 21 11a1 1 0 1 0-2 0 7 7 0 1 1-14 0Z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="action-row">
+              <button type="submit" class="btn btn-primary">保存冰箱</button>
+              <button id="deleteFridgeBtn" type="button" class="btn btn-danger">空仓删除</button>
+            </div>
+          </form>
+        </section>
+
+        <section id="modalCreateZone" class="modal-card hidden">
+          <header class="modal-head">
+            <h3>新增分区</h3>
+            <button type="button" class="modal-close" data-modal-close aria-label="关闭">
+              <svg viewBox="0 0 24 24"><path d="M6.7 5.3a1 1 0 0 0-1.4 1.4L10.6 12l-5.3 5.3a1 1 0 0 0 1.4 1.4l5.3-5.3 5.3 5.3a1 1 0 1 0 1.4-1.4L13.4 12l5.3-5.3a1 1 0 0 0-1.4-1.4L12 10.6 6.7 5.3Z"/></svg>
+            </button>
+          </header>
+          <form id="createZoneForm" class="form-grid">
+            <div class="field">
+              <label for="createZoneName">分区名称</label>
+              <div class="voice-wrap">
+                <input id="createZoneName" name="createZoneName" type="text" required maxlength="50" placeholder="蔬菜抽屉 / 饮料层" />
+                <button type="button" class="voice-btn" data-voice-target="createZoneName" aria-label="语音输入分区名称" aria-pressed="false">
+                  <svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 1 0 6 0V6a3 3 0 0 0-3-3Zm-7 8a1 1 0 1 0-2 0 9 9 0 0 0 8 8.94V22H8a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-2.06A9 9 0 0 0 21 11a1 1 0 1 0-2 0 7 7 0 1 1-14 0Z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label for="createZoneType">分区类型</label>
+                <select id="createZoneType" name="createZoneType">
+                  <option value="vegetable">蔬菜</option>
+                  <option value="protein">蛋白</option>
+                  <option value="dairy">乳制品</option>
+                  <option value="drinking">饮品</option>
+                  <option value="leftover">剩菜</option>
+                  <option value="frozen">冷冻</option>
+                  <option value="snack">零食</option>
+                  <option value="other">其他</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="createZoneCapacity">容量上限</label>
+                <input id="createZoneCapacity" name="createZoneCapacity" type="number" min="1" max="120" step="1" value="18" inputmode="numeric" />
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">创建分区</button>
+          </form>
+        </section>
+
+        <section id="modalEditZone" class="modal-card hidden">
+          <header class="modal-head">
+            <h3>编辑当前分区</h3>
+            <button type="button" class="modal-close" data-modal-close aria-label="关闭">
+              <svg viewBox="0 0 24 24"><path d="M6.7 5.3a1 1 0 0 0-1.4 1.4L10.6 12l-5.3 5.3a1 1 0 0 0 1.4 1.4l5.3-5.3 5.3 5.3a1 1 0 1 0 1.4-1.4L13.4 12l5.3-5.3a1 1 0 0 0-1.4-1.4L12 10.6 6.7 5.3Z"/></svg>
+            </button>
+          </header>
+          <form id="editZoneForm" class="form-grid">
+            <div class="field">
+              <label for="editZoneName">当前分区名</label>
+              <div class="voice-wrap">
+                <input id="editZoneName" name="editZoneName" type="text" maxlength="50" required />
+                <button type="button" class="voice-btn" data-voice-target="editZoneName" aria-label="语音输入当前分区名" aria-pressed="false">
+                  <svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 1 0 6 0V6a3 3 0 0 0-3-3Zm-7 8a1 1 0 1 0-2 0 9 9 0 0 0 8 8.94V22H8a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-2.06A9 9 0 0 0 21 11a1 1 0 1 0-2 0 7 7 0 1 1-14 0Z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label for="editZoneType">类型</label>
+                <select id="editZoneType" name="editZoneType">
+                  <option value="vegetable">蔬菜</option>
+                  <option value="protein">蛋白</option>
+                  <option value="dairy">乳制品</option>
+                  <option value="drinking">饮品</option>
+                  <option value="leftover">剩菜</option>
+                  <option value="frozen">冷冻</option>
+                  <option value="snack">零食</option>
+                  <option value="other">其他</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="editZoneCapacity">容量上限</label>
+                <input id="editZoneCapacity" name="editZoneCapacity" type="number" min="1" max="120" step="1" inputmode="numeric" />
+              </div>
+            </div>
+            <div class="action-row">
+              <button type="submit" class="btn btn-primary">保存分区</button>
+              <button id="deleteZoneBtn" type="button" class="btn btn-danger">空区删除</button>
+            </div>
+          </form>
+        </section>
+
+        <section id="modalLibrary" class="modal-card hidden">
+          <header class="modal-head">
+            <h3>食材库管理</h3>
+            <button type="button" class="modal-close" data-modal-close aria-label="关闭">
+              <svg viewBox="0 0 24 24"><path d="M6.7 5.3a1 1 0 0 0-1.4 1.4L10.6 12l-5.3 5.3a1 1 0 0 0 1.4 1.4l5.3-5.3 5.3 5.3a1 1 0 1 0 1.4-1.4L13.4 12l5.3-5.3a1 1 0 0 0-1.4-1.4L12 10.6 6.7 5.3Z"/></svg>
+            </button>
+          </header>
+          <form id="libraryForm" class="form-grid">
+            <input id="libraryItemId" name="libraryItemId" type="hidden" />
+            <div class="field">
+              <label for="libraryName">食材名</label>
+              <input id="libraryName" name="libraryName" type="text" required maxlength="50" placeholder="如：鸡蛋 / 生菜 / 酸奶" />
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label for="libraryUnit">默认单位</label>
+                <input id="libraryUnit" name="libraryUnit" type="text" required maxlength="20" value="份" />
+              </div>
+              <div class="field">
+                <label for="libraryCategory">默认品类</label>
+                <select id="libraryCategory" name="libraryCategory">
+                  <option value="vegetable">蔬菜</option>
+                  <option value="fruit">水果</option>
+                  <option value="protein">蛋白</option>
+                  <option value="dairy">乳制品</option>
+                  <option value="drink">饮品</option>
+                  <option value="leftover">剩菜</option>
+                  <option value="snack">零食</option>
+                  <option value="other">其他</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="field">
+                <label for="libraryDaysValid">默认保鲜天数</label>
+                <input id="libraryDaysValid" name="libraryDaysValid" type="number" min="1" max="60" step="1" value="5" inputmode="numeric" />
+              </div>
+              <div class="field">
+                <label for="libraryAliases">别名（逗号分隔）</label>
+                <input id="libraryAliases" name="libraryAliases" type="text" maxlength="120" placeholder="如：鸡子,土鸡蛋" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="libraryNote">备注</label>
+              <textarea id="libraryNote" name="libraryNote" rows="2" maxlength="140" placeholder="如：适合早餐，优先常温蛋"></textarea>
+            </div>
+            <div class="action-row">
+              <button id="saveLibraryItemBtn" type="submit" class="btn btn-primary">保存到食材库</button>
+              <button id="resetLibraryFormBtn" type="button" class="btn btn-ghost">清空表单</button>
+            </div>
+          </form>
+          <div class="library-meta-row">
+            <h4>经典 + 自定义食材</h4>
+            <span id="libraryCount" class="badge">0</span>
+          </div>
+          <div id="libraryList" class="library-list"></div>
+        </section>
+
+        <section id="modalItem" class="modal-card hidden">
+          <header class="modal-head">
+            <h3>食材编辑卡</h3>
+            <button type="button" class="modal-close" data-modal-close aria-label="关闭">
+              <svg viewBox="0 0 24 24"><path d="M6.7 5.3a1 1 0 0 0-1.4 1.4L10.6 12l-5.3 5.3a1 1 0 0 0 1.4 1.4l5.3-5.3 5.3 5.3a1 1 0 1 0 1.4-1.4L13.4 12l5.3-5.3a1 1 0 0 0-1.4-1.4L12 10.6 6.7 5.3Z"/></svg>
+            </button>
+          </header>
+          <form id="itemForm" class="form-grid">
+            <input id="itemId" name="itemId" type="hidden" />
+            <input id="itemSourceZoneId" name="itemSourceZoneId" type="hidden" />
+
+            <div class="field">
+              <label for="itemName">食材名</label>
+              <div class="voice-wrap">
+                <input id="itemName" name="itemName" type="text" maxlength="60" required placeholder="牛奶 / 鸡胸肉 / 西蓝花" />
+                <button type="button" class="voice-btn" data-voice-target="itemName" aria-label="语音输入食材名" aria-pressed="false">
+                  <svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 1 0 6 0V6a3 3 0 0 0-3-3Zm-7 8a1 1 0 1 0-2 0 9 9 0 0 0 8 8.94V22H8a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-2.06A9 9 0 0 0 21 11a1 1 0 1 0-2 0 7 7 0 1 1-14 0Z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="itemLibraryQuery">食材库快速引用</label>
+              <div class="search-row">
+                <input id="itemLibraryQuery" name="itemLibraryQuery" type="text" maxlength="60" list="librarySuggestions" placeholder="输入关键字，例如：鸡蛋 / milk / 番茄" />
+                <button id="applyLibraryBtn" type="button" class="btn btn-secondary">引用</button>
+              </div>
+              <datalist id="librarySuggestions"></datalist>
+              <div id="librarySuggestionChips" class="chip-suggestions"></div>
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="itemAmount">数量</label>
+                <input id="itemAmount" name="itemAmount" type="number" min="0" step="0.01" value="1" required inputmode="decimal" />
+              </div>
+              <div class="field">
+                <label for="itemUnit">单位</label>
+                <div class="voice-wrap">
+                  <input id="itemUnit" name="itemUnit" type="text" maxlength="20" value="份" required list="unitList" />
+                  <button type="button" class="voice-btn" data-voice-target="itemUnit" aria-label="语音输入单位" aria-pressed="false">
+                    <svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 1 0 6 0V6a3 3 0 0 0-3-3Zm-7 8a1 1 0 1 0-2 0 9 9 0 0 0 8 8.94V22H8a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-2.06A9 9 0 0 0 21 11a1 1 0 1 0-2 0 7 7 0 1 1-14 0Z"/></svg>
+                  </button>
+                </div>
+                <datalist id="unitList">
+                  <option value="份"></option>
+                  <option value="个"></option>
+                  <option value="盒"></option>
+                  <option value="瓶"></option>
+                  <option value="袋"></option>
+                  <option value="kg"></option>
+                  <option value="g"></option>
+                  <option value="L"></option>
+                  <option value="ml"></option>
+                </datalist>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="itemAddedDate">添加日期</label>
+                <input id="itemAddedDate" name="itemAddedDate" type="date" required />
+              </div>
+              <div class="field">
+                <label for="itemExpiryDate">到期日期</label>
+                <input id="itemExpiryDate" name="itemExpiryDate" type="date" required />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="itemStatus">状态</label>
+                <select id="itemStatus" name="itemStatus">
+                  <option value="Auto">自动判定</option>
+                  <option value="Fresh">新鲜</option>
+                  <option value="Watch">关注</option>
+                  <option value="Rescue Now">立即救援</option>
+                  <option value="Critical">今天处理</option>
+                  <option value="Expired">已过期</option>
+                  <option value="Consumed">已吃完</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="itemDaysLeft">剩余有效天数</label>
+                <output id="itemDaysLeft" class="output-box">--</output>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="field">
+                <label for="itemCategory">品类</label>
+                <select id="itemCategory" name="itemCategory">
+                  <option value="vegetable">蔬菜</option>
+                  <option value="fruit">水果</option>
+                  <option value="protein">蛋白</option>
+                  <option value="dairy">乳制品</option>
+                  <option value="drink">饮品</option>
+                  <option value="leftover">剩菜</option>
+                  <option value="snack">零食</option>
+                  <option value="other">其他</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="itemZoneId">目标分区</label>
+                <select id="itemZoneId" name="itemZoneId"></select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="itemNote">备注</label>
+              <div class="voice-wrap">
+                <textarea id="itemNote" name="itemNote" rows="2" maxlength="140" placeholder="建议：写下用途或计划菜谱"></textarea>
+                <button type="button" class="voice-btn" data-voice-target="itemNote" aria-label="语音输入备注" aria-pressed="false">
+                  <svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 1 0 6 0V6a3 3 0 0 0-3-3Zm-7 8a1 1 0 1 0-2 0 9 9 0 0 0 8 8.94V22H8a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-2.06A9 9 0 0 0 21 11a1 1 0 1 0-2 0 7 7 0 1 1-14 0Z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="action-row">
+              <button id="itemSubmitBtn" type="submit" class="btn btn-primary">添加食材</button>
+              <button id="cancelEditItemBtn" type="button" class="btn btn-ghost hidden">取消编辑</button>
+            </div>
+            <button id="saveCurrentItemToLibraryBtn" type="button" class="btn btn-ghost">将当前食材保存到食材库</button>
+          </form>
+        </section>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
