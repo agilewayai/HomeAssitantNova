@@ -1,47 +1,51 @@
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@500;600;700&display=swap");
 
 :root {
-  --bg: #f6f8fb;
-  --bg-soft: #edf2f8;
-  --surface: rgba(255, 255, 255, 0.84);
-  --surface-strong: rgba(255, 255, 255, 0.94);
-  --surface-border: rgba(98, 124, 155, 0.2);
-  --surface-border-strong: rgba(98, 124, 155, 0.3);
+  --bg: #f0fdf4;
+  --bg-soft: #dcfce7;
+  --surface: rgba(255, 255, 255, 0.7);
+  --surface-strong: rgba(255, 255, 255, 0.82);
+  --surface-border: rgba(255, 255, 255, 0.62);
+  --surface-border-strong: rgba(167, 243, 208, 0.72);
 
-  --ink-900: #101f30;
-  --ink-700: #2f4259;
-  --ink-600: #425a74;
-  --ink-500: #617892;
+  --ink-900: #064e3b;
+  --ink-700: #065f46;
+  --ink-600: #0f766e;
+  --ink-500: #2b7f73;
 
-  --primary: #2f789b;
-  --primary-soft: #66afca;
-  --mint: #2f8f73;
-  --amber: #9b731f;
-  --danger: #ac4256;
+  --primary: #2dd4bf;
+  --primary-soft: #a7f3d0;
+  --mint: #10b981;
+  --amber: #f59e0b;
+  --danger: #dc5174;
 
-  --ring: rgba(47, 120, 155, 0.28);
-  --radius-xl: 28px;
-  --radius-lg: 18px;
-  --radius-md: 14px;
-  --radius-sm: 10px;
+  --ring: rgba(45, 212, 191, 0.3);
+  --radius-xl: 32px;
+  --radius-lg: 24px;
+  --radius-md: 18px;
+  --radius-sm: 14px;
 
-  --shadow-xs: 0 1px 4px rgba(14, 34, 56, 0.07);
-  --shadow-sm: 0 8px 18px rgba(16, 39, 63, 0.09);
-  --shadow-md: 0 12px 26px rgba(16, 39, 63, 0.11);
-  --shadow-lg: 0 18px 34px rgba(16, 39, 63, 0.13);
+  --shadow-xs: 0 3px 10px rgba(16, 185, 129, 0.11);
+  --shadow-sm: 0 10px 30px rgba(45, 212, 191, 0.12);
+  --shadow-md: 0 20px 42px rgba(45, 212, 191, 0.16);
+  --shadow-lg: 0 32px 62px rgba(6, 95, 70, 0.18);
 
-  --fridge-shell-1: #fdfefe;
-  --fridge-shell-2: #e4edf5;
-  --fridge-shell-3: #e9f2f8;
-  --fridge-shell-border: rgba(112, 155, 191, 0.36);
-  --fridge-core-1: rgba(247, 253, 255, 0.98);
-  --fridge-core-2: rgba(224, 239, 250, 0.95);
-  --fridge-core-border: rgba(125, 164, 198, 0.34);
-  --fridge-door-1: rgba(239, 247, 255, 0.96);
-  --fridge-door-2: rgba(177, 208, 234, 0.93);
-  --fridge-door-border: rgba(117, 159, 195, 0.34);
-  --fridge-handle-1: #92afca;
-  --fridge-handle-2: #6686a7;
+  --glass-base: rgba(255, 255, 255, 0.72);
+  --glass-core: rgba(255, 255, 255, 0.82);
+  --glass-edge: rgba(255, 255, 255, 0.6);
+
+  --fridge-shell-1: #fbfffd;
+  --fridge-shell-2: #dbf8ee;
+  --fridge-shell-3: #c9f4e5;
+  --fridge-shell-border: rgba(45, 212, 191, 0.32);
+  --fridge-core-1: rgba(249, 255, 252, 0.97);
+  --fridge-core-2: rgba(225, 250, 241, 0.94);
+  --fridge-core-border: rgba(65, 195, 170, 0.3);
+  --fridge-door-1: rgba(239, 254, 248, 0.94);
+  --fridge-door-2: rgba(171, 237, 221, 0.88);
+  --fridge-door-border: rgba(68, 186, 164, 0.34);
+  --fridge-handle-1: #8fcbbe;
+  --fridge-handle-2: #4f9f8f;
 
   --speed-fast: 170ms;
   --speed-mid: 240ms;
@@ -79,7 +83,10 @@ body {
   color: var(--ink-900);
   font-family: "Manrope", "Noto Sans SC", sans-serif;
   line-height: 1.62;
-  background: linear-gradient(165deg, #fafcff 0%, #f3f7fc 45%, #f6f8fb 100%);
+  background:
+    radial-gradient(circle at 8% 8%, rgba(167, 243, 208, 0.5) 0, transparent 38%),
+    radial-gradient(circle at 92% 7%, rgba(45, 212, 191, 0.3) 0, transparent 32%),
+    linear-gradient(162deg, #f7fff9 0%, #f0fdf4 44%, #ecfdf5 100%);
   overscroll-behavior: contain;
   overflow-x: hidden;
   padding-top: env(safe-area-inset-top);
@@ -94,7 +101,7 @@ body {
   left: 0.75rem;
   transform: translateY(-160%);
   z-index: 999;
-  background: #0e283f;
+  background: #064e3b;
   color: #ffffff;
   border-radius: 10px;
   padding: 0.55rem 0.8rem;
@@ -116,16 +123,19 @@ body {
 
 .bg-halo {
   background:
-    radial-gradient(circle at 8% 8%, rgba(114, 201, 255, 0.08), transparent 30%),
-    radial-gradient(circle at 91% 4%, rgba(77, 232, 211, 0.06), transparent 28%);
+    radial-gradient(circle at 8% 10%, rgba(167, 243, 208, 0.46), transparent 42%),
+    radial-gradient(circle at 90% 8%, rgba(45, 212, 191, 0.24), transparent 38%),
+    radial-gradient(circle at 76% 88%, rgba(254, 243, 199, 0.33), transparent 34%);
   z-index: -2;
+  animation: spring-float 6s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
 .bg-grain {
-  background-image: radial-gradient(rgba(40, 77, 111, 0.022) 0.9px, transparent 0.9px);
+  background-image: radial-gradient(rgba(6, 78, 59, 0.035) 0.82px, transparent 0.82px);
   background-size: 3px 3px;
   z-index: -1;
-  opacity: 0.14;
+  opacity: 0.09;
 }
 
 .nova-app {
@@ -154,7 +164,7 @@ h4 {
 
 h1 {
   font-size: clamp(2rem, 2.45vw, 2.9rem);
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.005em;
   color: var(--ink-900);
 }
@@ -183,8 +193,10 @@ h1 {
   align-items: center;
   gap: 0.42rem;
   border-radius: 999px;
-  border: 1px solid rgba(109, 148, 184, 0.3);
-  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid var(--surface-border-strong);
+  background: var(--glass-base);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   padding: 0.22rem 0.28rem 0.22rem 0.54rem;
 }
 
@@ -198,9 +210,9 @@ h1 {
   width: auto;
   min-height: 36px;
   border-radius: 999px;
-  border: 1px solid rgba(108, 148, 184, 0.34);
+  border: 1px solid rgba(123, 209, 190, 0.5);
   padding: 0.24rem 0.62rem;
-  background: rgba(255, 255, 255, 0.98);
+  background: rgba(255, 255, 255, 0.92);
   font-size: 0.78rem;
   font-weight: 700;
 }
@@ -208,13 +220,13 @@ h1 {
 .kpi-pill {
   border-radius: 999px;
   padding: 0.42rem 0.72rem;
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid rgba(113, 142, 173, 0.24);
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(167, 243, 208, 0.78);
   color: var(--ink-700);
   font-size: 0.79rem;
   font-weight: 600;
   white-space: nowrap;
-  box-shadow: none;
+  box-shadow: 0 6px 18px rgba(45, 212, 191, 0.08);
 }
 
 .layout {
@@ -229,6 +241,8 @@ h1 {
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(34px) saturate(130%);
+  -webkit-backdrop-filter: blur(34px) saturate(130%);
 }
 
 .left-panel,
@@ -262,10 +276,10 @@ h1 {
 }
 
 .panel-section {
-  padding: 0.92rem;
+  padding: 0.96rem;
   border-radius: var(--radius-lg);
-  background: var(--surface-strong);
-  border: 1px solid rgba(115, 154, 189, 0.2);
+  background: linear-gradient(148deg, var(--glass-core), var(--glass-base));
+  border: 1px solid var(--surface-border-strong);
 }
 
 .lite-disclosure {
@@ -275,7 +289,7 @@ h1 {
 .lite-disclosure > summary {
   list-style: none;
   cursor: pointer;
-  font-family: "Sora", "Noto Sans SC", sans-serif;
+  font-family: "Manrope", "Noto Sans SC", sans-serif;
   font-weight: 700;
   color: var(--ink-700);
   display: flex;
@@ -293,9 +307,10 @@ h1 {
   font-family: "Manrope", "Noto Sans SC", sans-serif;
   font-size: 0.76rem;
   color: var(--ink-500);
-  border: 1px solid rgba(107, 149, 184, 0.3);
+  border: 1px solid rgba(129, 214, 197, 0.58);
   border-radius: 999px;
   padding: 0.08rem 0.45rem;
+  background: rgba(255, 255, 255, 0.58);
 }
 
 .lite-disclosure[open] > summary::after {
@@ -329,16 +344,16 @@ h1 {
 .operation-grid {
   margin-top: 0.65rem;
   display: grid;
-  gap: 0.5rem;
+  gap: 0.56rem;
   grid-template-columns: 1fr;
 }
 
 .op-btn {
   min-height: 44px;
-  border: 1px solid rgba(106, 148, 184, 0.38);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.92);
-  color: #1f5d86;
+  border: 1px solid rgba(129, 214, 197, 0.62);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.68);
+  color: #0f766e;
   font-weight: 700;
   padding: 0.45rem 0.58rem;
   display: inline-flex;
@@ -351,8 +366,12 @@ h1 {
 
 .op-btn:hover {
   transform: translateY(-1px);
-  background: rgba(232, 246, 255, 0.96);
-  box-shadow: var(--shadow-xs);
+  background: rgba(240, 254, 250, 0.94);
+  box-shadow: 0 8px 18px rgba(45, 212, 191, 0.16);
+}
+
+.op-btn:active {
+  transform: scale(0.96);
 }
 
 .op-btn:disabled {
@@ -394,7 +413,7 @@ h1 {
 .split-top {
   margin-top: 0.78rem;
   padding-top: 0.78rem;
-  border-top: 1px dashed rgba(109, 148, 181, 0.42);
+  border-top: 1px dashed rgba(121, 207, 188, 0.56);
 }
 
 .grid-2 {
@@ -416,9 +435,9 @@ h1 {
 
 .theme-chip {
   min-height: 44px;
-  border-radius: 12px;
-  border: 1px solid rgba(106, 148, 184, 0.38);
-  background: rgba(255, 255, 255, 0.92);
+  border-radius: 14px;
+  border: 1px solid rgba(129, 214, 197, 0.62);
+  background: rgba(255, 255, 255, 0.68);
   color: var(--ink-700);
   display: inline-flex;
   align-items: center;
@@ -433,21 +452,21 @@ h1 {
 
 .theme-chip:hover {
   transform: translateY(-1px);
-  background: rgba(236, 248, 255, 0.95);
+  background: rgba(240, 254, 250, 0.94);
 }
 
 .theme-chip.active {
   border-color: var(--primary);
-  background: rgba(227, 244, 253, 0.98);
-  box-shadow: 0 0 0 3px rgba(12, 136, 184, 0.14);
+  background: rgba(236, 253, 245, 0.95);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.2);
 }
 
 .theme-dot {
   width: 14px;
   height: 14px;
   border-radius: 999px;
-  background: var(--theme-color, #9eb4c7);
-  border: 1px solid rgba(40, 72, 102, 0.2);
+  background: var(--theme-color, #7cc5b5);
+  border: 1px solid rgba(73, 134, 121, 0.24);
 }
 
 label {
@@ -478,9 +497,9 @@ select,
 textarea {
   width: 100%;
   min-height: 44px;
-  border-radius: 12px;
-  border: 1px solid rgba(111, 149, 184, 0.42);
-  background: rgba(255, 255, 255, 0.96);
+  border-radius: 14px;
+  border: 1px solid rgba(129, 214, 197, 0.58);
+  background: rgba(255, 255, 255, 0.82);
   color: var(--ink-900);
   padding: 0.55rem 0.72rem;
   transition:
@@ -496,7 +515,7 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
-  color: #6a8aa4;
+  color: #4b9287;
 }
 
 input:focus-visible,
@@ -534,10 +553,10 @@ button:focus-visible {
 
 .chip-suggestion-btn {
   min-height: 40px;
-  border-radius: 12px;
-  border: 1px solid rgba(107, 150, 186, 0.36);
-  background: rgba(255, 255, 255, 0.92);
-  color: #1f5d86;
+  border-radius: 14px;
+  border: 1px solid rgba(129, 214, 197, 0.58);
+  background: rgba(255, 255, 255, 0.68);
+  color: #0f766e;
   padding: 0.24rem 0.56rem;
   cursor: pointer;
   display: inline-flex;
@@ -548,7 +567,7 @@ button:focus-visible {
 
 .chip-suggestion-btn:hover {
   transform: translateY(-1px);
-  background: rgba(232, 246, 255, 0.95);
+  background: rgba(237, 253, 247, 0.9);
 }
 
 .chip-name {
@@ -569,10 +588,10 @@ button:focus-visible {
 .voice-btn {
   min-width: 44px;
   min-height: 44px;
-  border-radius: 12px;
-  border: 1px solid rgba(106, 148, 185, 0.42);
-  background: linear-gradient(140deg, #ffffff 0%, #e9f7ff 100%);
-  color: #1d5f88;
+  border-radius: 14px;
+  border: 1px solid rgba(121, 207, 188, 0.62);
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.92) 0%, rgba(233, 255, 247, 0.88) 100%);
+  color: #0f766e;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -588,7 +607,7 @@ button:focus-visible {
 
 .voice-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 18px rgba(23, 90, 136, 0.18);
+  box-shadow: 0 10px 22px rgba(16, 185, 129, 0.18);
 }
 
 .voice-btn.recording {
@@ -606,7 +625,7 @@ button:focus-visible {
 .btn {
   min-height: 44px;
   border: 0;
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 0.56rem 0.84rem;
   font-weight: 800;
   letter-spacing: 0.01em;
@@ -618,6 +637,10 @@ button:focus-visible {
   transform: translateY(-1px);
 }
 
+.btn:active {
+  transform: scale(0.95);
+}
+
 .btn:disabled {
   opacity: 0.48;
   cursor: not-allowed;
@@ -626,26 +649,26 @@ button:focus-visible {
 
 .btn-primary {
   color: #ffffff;
-  background: linear-gradient(132deg, #0d8dc1 0%, #0d6a9a 100%);
-  box-shadow: 0 12px 24px rgba(14, 94, 136, 0.24);
+  background: linear-gradient(132deg, #2dd4bf 0%, #14b8a6 100%);
+  box-shadow: 0 14px 28px rgba(20, 184, 166, 0.24);
 }
 
 .btn-secondary {
-  color: #1d5f88;
-  background: linear-gradient(140deg, rgba(255, 255, 255, 0.95), rgba(232, 246, 255, 0.92));
-  border: 1px solid rgba(104, 146, 182, 0.35);
+  color: #0f766e;
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.88), rgba(230, 253, 244, 0.86));
+  border: 1px solid rgba(121, 207, 188, 0.52);
 }
 
 .btn-danger {
   color: #ffffff;
-  background: linear-gradient(132deg, #c84b62, #a52d47);
-  box-shadow: 0 12px 24px rgba(154, 38, 63, 0.24);
+  background: linear-gradient(132deg, #ec7090, #d6476d);
+  box-shadow: 0 12px 24px rgba(194, 44, 89, 0.24);
 }
 
 .btn-ghost {
   color: var(--ink-700);
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(107, 150, 186, 0.38);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(129, 214, 197, 0.58);
 }
 
 .hidden {
@@ -654,9 +677,9 @@ button:focus-visible {
 
 .output-box {
   min-height: 44px;
-  border-radius: 12px;
-  border: 1px dashed rgba(103, 147, 184, 0.5);
-  background: rgba(246, 251, 255, 0.95);
+  border-radius: 14px;
+  border: 1px dashed rgba(109, 197, 178, 0.66);
+  background: rgba(246, 255, 251, 0.9);
   color: var(--ink-700);
   display: flex;
   align-items: center;
@@ -673,8 +696,8 @@ button:focus-visible {
 .fleet-card {
   text-align: left;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(103, 147, 182, 0.34);
-  background: linear-gradient(140deg, rgba(255, 255, 255, 0.95), rgba(235, 247, 255, 0.88));
+  border: 1px solid rgba(121, 207, 188, 0.56);
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.76), rgba(236, 254, 246, 0.72));
   padding: 0.62rem;
   cursor: pointer;
   transition:
@@ -685,16 +708,16 @@ button:focus-visible {
 
 .fleet-card:hover {
   transform: translateY(-1px);
-  box-shadow: 0 12px 22px rgba(27, 81, 120, 0.16);
+  box-shadow: 0 14px 28px rgba(16, 185, 129, 0.16);
 }
 
 .fleet-card.active {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(12, 136, 184, 0.18), 0 12px 24px rgba(21, 78, 118, 0.2);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.24), 0 12px 24px rgba(16, 185, 129, 0.18);
 }
 
 .fleet-card .name {
-  font-family: "Sora", "Noto Sans SC", sans-serif;
+  font-family: "Manrope", "Noto Sans SC", sans-serif;
   font-size: 0.98rem;
   color: var(--ink-900);
 }
@@ -719,15 +742,15 @@ button:focus-visible {
   padding: 0.15rem 0.5rem;
   font-size: 0.71rem;
   font-weight: 700;
-  color: #29536f;
-  background: rgba(183, 228, 255, 0.38);
+  color: #065f46;
+  background: rgba(167, 243, 208, 0.52);
 }
 
 .audit-card {
   margin-top: 0.56rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(107, 150, 185, 0.3);
-  background: linear-gradient(140deg, rgba(255, 255, 255, 0.95), rgba(230, 247, 244, 0.9));
+  border: 1px solid rgba(118, 204, 186, 0.54);
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.76), rgba(229, 254, 242, 0.76));
   padding: 0.66rem;
 }
 
@@ -751,9 +774,9 @@ button:focus-visible {
 }
 
 .risk-card {
-  border-radius: 14px;
-  border: 1px solid rgba(110, 151, 186, 0.24);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(236, 248, 255, 0.88));
+  border-radius: 18px;
+  border: 1px solid rgba(121, 207, 188, 0.52);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(236, 254, 246, 0.72));
   padding: 0.62rem;
 }
 
@@ -768,7 +791,7 @@ button:focus-visible {
   color: var(--ink-900);
   font-size: 1.32rem;
   font-weight: 900;
-  font-family: "Sora", "Noto Sans SC", sans-serif;
+  font-family: "Manrope", "Noto Sans SC", sans-serif;
 }
 
 .risk-card .desc {
@@ -783,40 +806,74 @@ button:focus-visible {
 }
 
 .risk-card.rescue {
-  border-color: rgba(183, 129, 20, 0.36);
-  background: linear-gradient(145deg, rgba(255, 252, 246, 0.95), rgba(255, 242, 215, 0.88));
+  border-color: rgba(245, 158, 11, 0.44);
+  background: linear-gradient(145deg, rgba(255, 253, 245, 0.84), rgba(254, 243, 199, 0.68));
 }
 
 .risk-card.fresh {
-  border-color: rgba(31, 163, 112, 0.34);
-  background: linear-gradient(145deg, rgba(246, 255, 251, 0.95), rgba(227, 250, 241, 0.88));
+  border-color: rgba(16, 185, 129, 0.44);
+  background: linear-gradient(145deg, rgba(245, 255, 250, 0.84), rgba(167, 243, 208, 0.54));
 }
 
 .risk-card.value {
-  border-color: rgba(12, 136, 184, 0.34);
+  border-color: rgba(45, 212, 191, 0.48);
 }
 
 .fridge-stage {
   margin-top: 0.66rem;
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(106, 149, 184, 0.24);
+  border: 1px solid rgba(129, 214, 197, 0.58);
   background:
-    radial-gradient(circle at 16% 12%, rgba(148, 219, 255, 0.28) 0 18%, transparent 42%),
-    linear-gradient(140deg, rgba(247, 252, 255, 0.95), rgba(235, 245, 252, 0.88));
+    radial-gradient(circle at 14% 10%, rgba(167, 243, 208, 0.48) 0 26%, transparent 50%),
+    linear-gradient(140deg, rgba(249, 255, 252, 0.82), rgba(235, 254, 246, 0.76));
   padding: 0.92rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(34px) saturate(132%);
+  -webkit-backdrop-filter: blur(34px) saturate(132%);
+}
+
+.fridge-stage::before {
+  content: "";
+  position: absolute;
+  inset: -24% -10% auto;
+  height: 66%;
+  background: radial-gradient(circle at 52% 34%, rgba(45, 212, 191, 0.24), transparent 64%);
+  pointer-events: none;
+  animation: spring-float 6s ease-in-out infinite alternate;
+}
+
+.fridge-stage::after {
+  content: "";
+  position: absolute;
+  left: 22%;
+  right: 22%;
+  bottom: -28%;
+  height: 56%;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(167, 243, 208, 0.42), transparent 72%);
+  filter: blur(18px);
+  pointer-events: none;
+  animation: spring-breath 4s ease-in-out infinite;
+}
+
+.fridge-stage > * {
+  position: relative;
+  z-index: 1;
 }
 
 .fridge-cabinet {
   width: min(100%, 920px);
   margin: 0 auto;
   min-height: 500px;
-  border-radius: 34px;
+  border-radius: 38px;
   padding: 0.82rem;
   position: relative;
   perspective: 1200px;
-  border: 2px solid var(--fridge-shell-border);
+  border: 1px solid var(--fridge-shell-border);
   background: linear-gradient(170deg, var(--fridge-shell-1) 0%, var(--fridge-shell-2) 42%, var(--fridge-shell-3) 100%);
-  box-shadow: var(--shadow-lg), inset 0 0 0 1px rgba(255, 255, 255, 0.64);
+  box-shadow: var(--shadow-lg), inset 0 0 0 1px rgba(255, 255, 255, 0.76);
   overflow: hidden;
 }
 
@@ -831,122 +888,126 @@ button:focus-visible {
 .fridge-core {
   min-height: 464px;
   padding: 0.8rem;
-  border-radius: 26px;
-  border: 2px solid var(--fridge-core-border);
+  border-radius: 30px;
+  border: 1px solid var(--fridge-core-border);
   background: linear-gradient(180deg, var(--fridge-core-1), var(--fridge-core-2));
+  backdrop-filter: blur(26px);
+  -webkit-backdrop-filter: blur(26px);
 }
 
 .fridge-door {
   position: absolute;
   inset: 0;
-  border-radius: 31px;
-  border: 2px solid var(--fridge-door-border);
+  border-radius: 35px;
+  border: 1px solid var(--fridge-door-border);
   background: linear-gradient(138deg, var(--fridge-door-1), var(--fridge-door-2));
-  box-shadow: -16px 0 30px rgba(42, 79, 115, 0.24) inset;
+  box-shadow: -16px 0 30px rgba(12, 103, 86, 0.18) inset;
   transform-origin: left center;
   transition: transform 420ms ease, opacity var(--speed-mid) ease;
   z-index: 3;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .fridge-handle {
   position: absolute;
   top: 18%;
   right: 6%;
-  width: 11px;
+  width: 12px;
   height: 40%;
   border-radius: 9px;
   background: linear-gradient(180deg, var(--fridge-handle-1), var(--fridge-handle-2));
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.48);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
 }
 
 .fridge-cabinet.theme-arctic {
-  --fridge-shell-1: #fdfefe;
-  --fridge-shell-2: #e4edf5;
-  --fridge-shell-3: #e9f2f8;
-  --fridge-shell-border: rgba(112, 155, 191, 0.36);
-  --fridge-core-1: rgba(247, 253, 255, 0.98);
-  --fridge-core-2: rgba(224, 239, 250, 0.95);
-  --fridge-core-border: rgba(125, 164, 198, 0.34);
-  --fridge-door-1: rgba(239, 247, 255, 0.96);
-  --fridge-door-2: rgba(177, 208, 234, 0.93);
-  --fridge-door-border: rgba(117, 159, 195, 0.34);
-  --fridge-handle-1: #92afca;
-  --fridge-handle-2: #6686a7;
+  --fridge-shell-1: #fbfffd;
+  --fridge-shell-2: #d7f6ef;
+  --fridge-shell-3: #c2ece5;
+  --fridge-shell-border: rgba(58, 197, 177, 0.36);
+  --fridge-core-1: rgba(246, 255, 251, 0.97);
+  --fridge-core-2: rgba(216, 248, 239, 0.93);
+  --fridge-core-border: rgba(82, 189, 171, 0.34);
+  --fridge-door-1: rgba(236, 254, 247, 0.92);
+  --fridge-door-2: rgba(160, 230, 214, 0.84);
+  --fridge-door-border: rgba(64, 174, 156, 0.38);
+  --fridge-handle-1: #82c2b2;
+  --fridge-handle-2: #4d9789;
 }
 
 .fridge-cabinet.theme-mint {
-  --fridge-shell-1: #f5fffb;
-  --fridge-shell-2: #dcefe8;
-  --fridge-shell-3: #d9e9e3;
-  --fridge-shell-border: rgba(104, 162, 140, 0.44);
-  --fridge-core-1: rgba(245, 255, 250, 0.98);
-  --fridge-core-2: rgba(224, 243, 234, 0.95);
-  --fridge-core-border: rgba(107, 165, 144, 0.38);
-  --fridge-door-1: rgba(232, 252, 243, 0.96);
-  --fridge-door-2: rgba(165, 214, 195, 0.94);
-  --fridge-door-border: rgba(95, 151, 129, 0.4);
-  --fridge-handle-1: #7fb79f;
-  --fridge-handle-2: #5f8f7d;
+  --fridge-shell-1: #f3fff9;
+  --fridge-shell-2: #cef5e4;
+  --fridge-shell-3: #b8ecd7;
+  --fridge-shell-border: rgba(48, 182, 140, 0.4);
+  --fridge-core-1: rgba(244, 255, 249, 0.97);
+  --fridge-core-2: rgba(208, 244, 229, 0.93);
+  --fridge-core-border: rgba(63, 172, 135, 0.36);
+  --fridge-door-1: rgba(232, 253, 242, 0.92);
+  --fridge-door-2: rgba(146, 223, 193, 0.84);
+  --fridge-door-border: rgba(46, 162, 125, 0.4);
+  --fridge-handle-1: #79be9f;
+  --fridge-handle-2: #4d977b;
 }
 
 .fridge-cabinet.theme-pearl {
-  --fridge-shell-1: #fffefe;
-  --fridge-shell-2: #eef1f6;
-  --fridge-shell-3: #edf0f5;
-  --fridge-shell-border: rgba(151, 164, 183, 0.38);
-  --fridge-core-1: rgba(255, 255, 255, 0.98);
-  --fridge-core-2: rgba(237, 241, 248, 0.95);
-  --fridge-core-border: rgba(160, 172, 190, 0.34);
-  --fridge-door-1: rgba(251, 252, 255, 0.96);
-  --fridge-door-2: rgba(206, 216, 230, 0.93);
-  --fridge-door-border: rgba(151, 164, 185, 0.36);
-  --fridge-handle-1: #a7b3c4;
-  --fridge-handle-2: #7d8ca3;
+  --fridge-shell-1: #ffffff;
+  --fridge-shell-2: #edf6f3;
+  --fridge-shell-3: #e4efe9;
+  --fridge-shell-border: rgba(121, 162, 150, 0.32);
+  --fridge-core-1: rgba(255, 255, 255, 0.97);
+  --fridge-core-2: rgba(237, 248, 243, 0.93);
+  --fridge-core-border: rgba(130, 166, 155, 0.34);
+  --fridge-door-1: rgba(251, 255, 253, 0.92);
+  --fridge-door-2: rgba(202, 223, 214, 0.84);
+  --fridge-door-border: rgba(124, 164, 152, 0.36);
+  --fridge-handle-1: #a1b8b0;
+  --fridge-handle-2: #6d8d83;
 }
 
 .fridge-cabinet.theme-sunset {
-  --fridge-shell-1: #fff9f3;
-  --fridge-shell-2: #f1dfcf;
-  --fridge-shell-3: #f0ddcc;
-  --fridge-shell-border: rgba(186, 139, 101, 0.42);
-  --fridge-core-1: rgba(255, 250, 245, 0.98);
-  --fridge-core-2: rgba(246, 230, 213, 0.95);
-  --fridge-core-border: rgba(184, 135, 97, 0.36);
-  --fridge-door-1: rgba(255, 244, 232, 0.96);
-  --fridge-door-2: rgba(227, 186, 150, 0.93);
-  --fridge-door-border: rgba(184, 132, 92, 0.4);
-  --fridge-handle-1: #d0a47b;
-  --fridge-handle-2: #a97b52;
+  --fridge-shell-1: #fffaf4;
+  --fridge-shell-2: #f8e8d6;
+  --fridge-shell-3: #efd7be;
+  --fridge-shell-border: rgba(204, 152, 103, 0.38);
+  --fridge-core-1: rgba(255, 250, 245, 0.96);
+  --fridge-core-2: rgba(247, 232, 214, 0.92);
+  --fridge-core-border: rgba(198, 146, 97, 0.36);
+  --fridge-door-1: rgba(255, 244, 230, 0.9);
+  --fridge-door-2: rgba(236, 194, 153, 0.82);
+  --fridge-door-border: rgba(194, 139, 92, 0.38);
+  --fridge-handle-1: #d8a773;
+  --fridge-handle-2: #a77a4f;
 }
 
 .fridge-cabinet.theme-rose {
-  --fridge-shell-1: #fff7fb;
-  --fridge-shell-2: #eddde8;
-  --fridge-shell-3: #eedde7;
-  --fridge-shell-border: rgba(166, 127, 147, 0.42);
-  --fridge-core-1: rgba(255, 248, 253, 0.98);
-  --fridge-core-2: rgba(242, 227, 236, 0.95);
-  --fridge-core-border: rgba(174, 132, 153, 0.38);
-  --fridge-door-1: rgba(253, 240, 248, 0.96);
-  --fridge-door-2: rgba(215, 178, 196, 0.93);
-  --fridge-door-border: rgba(171, 127, 148, 0.4);
-  --fridge-handle-1: #cb9ab0;
-  --fridge-handle-2: #9f6f87;
+  --fridge-shell-1: #fff8fc;
+  --fridge-shell-2: #f5dfea;
+  --fridge-shell-3: #edd0dd;
+  --fridge-shell-border: rgba(190, 131, 158, 0.4);
+  --fridge-core-1: rgba(255, 248, 252, 0.96);
+  --fridge-core-2: rgba(244, 223, 234, 0.92);
+  --fridge-core-border: rgba(182, 123, 149, 0.36);
+  --fridge-door-1: rgba(253, 238, 247, 0.9);
+  --fridge-door-2: rgba(226, 180, 204, 0.82);
+  --fridge-door-border: rgba(181, 118, 146, 0.38);
+  --fridge-handle-1: #d39ab6;
+  --fridge-handle-2: #9e6b86;
 }
 
 .fridge-cabinet.theme-graphite {
-  --fridge-shell-1: #f4f7fa;
-  --fridge-shell-2: #d8e0e8;
-  --fridge-shell-3: #d4dde7;
-  --fridge-shell-border: rgba(101, 124, 148, 0.44);
-  --fridge-core-1: rgba(243, 248, 253, 0.98);
-  --fridge-core-2: rgba(217, 228, 240, 0.95);
-  --fridge-core-border: rgba(97, 120, 144, 0.4);
-  --fridge-door-1: rgba(232, 240, 247, 0.96);
-  --fridge-door-2: rgba(150, 171, 192, 0.93);
-  --fridge-door-border: rgba(95, 116, 140, 0.42);
-  --fridge-handle-1: #8ea2b8;
-  --fridge-handle-2: #63778f;
+  --fridge-shell-1: #f5faf8;
+  --fridge-shell-2: #d8e6e1;
+  --fridge-shell-3: #ccdcd7;
+  --fridge-shell-border: rgba(101, 137, 127, 0.42);
+  --fridge-core-1: rgba(245, 250, 248, 0.96);
+  --fridge-core-2: rgba(214, 228, 223, 0.92);
+  --fridge-core-border: rgba(98, 130, 120, 0.38);
+  --fridge-door-1: rgba(235, 244, 240, 0.9);
+  --fridge-door-2: rgba(156, 178, 170, 0.82);
+  --fridge-door-border: rgba(91, 119, 109, 0.4);
+  --fridge-handle-1: #8da8a0;
+  --fridge-handle-2: #5f776f;
 }
 
 .fridge-cabinet.door-open .fridge-door {
@@ -972,9 +1033,9 @@ button:focus-visible {
 
 .zone-card {
   text-align: left;
-  border-radius: 16px;
-  border: 1px solid rgba(98, 141, 178, 0.36);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(225, 241, 252, 0.9));
+  border-radius: 20px;
+  border: 1px solid rgba(122, 208, 190, 0.58);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(231, 254, 244, 0.68));
   padding: 0.62rem;
   cursor: pointer;
   display: grid;
@@ -987,12 +1048,12 @@ button:focus-visible {
 
 .zone-card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 14px 26px rgba(16, 185, 129, 0.16);
 }
 
 .zone-card.selected {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(12, 136, 184, 0.2), var(--shadow-md);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.24), 0 16px 30px rgba(16, 185, 129, 0.16);
 }
 
 .zone-head {
@@ -1003,8 +1064,8 @@ button:focus-visible {
 }
 
 .zone-name {
-  color: #1a4a6d;
-  font-family: "Sora", "Noto Sans SC", sans-serif;
+  color: #065f46;
+  font-family: "Manrope", "Noto Sans SC", sans-serif;
   font-size: 0.96rem;
 }
 
@@ -1013,12 +1074,12 @@ button:focus-visible {
   padding: 0.12rem 0.44rem;
   font-size: 0.71rem;
   font-weight: 700;
-  color: #275777;
-  background: rgba(165, 220, 255, 0.42);
+  color: #065f46;
+  background: rgba(167, 243, 208, 0.56);
 }
 
 .zone-meta {
-  color: #3a617f;
+  color: #2b7f73;
   font-size: 0.79rem;
 }
 
@@ -1026,14 +1087,14 @@ button:focus-visible {
   width: 100%;
   height: 8px;
   border-radius: 999px;
-  background: rgba(133, 170, 200, 0.26);
+  background: rgba(121, 201, 184, 0.28);
   overflow: hidden;
 }
 
 .capacity-fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #1ea06f, #0d88b8);
+  background: linear-gradient(90deg, #10b981, #2dd4bf);
 }
 
 .zone-foot {
@@ -1042,7 +1103,7 @@ button:focus-visible {
   align-items: center;
   gap: 0.4rem;
   font-size: 0.74rem;
-  color: #355a78;
+  color: #256c61;
 }
 
 .zone-card.risk-expired {
@@ -1051,13 +1112,13 @@ button:focus-visible {
 }
 
 .zone-card.risk-rescue {
-  border-color: rgba(183, 129, 20, 0.36);
-  background: linear-gradient(145deg, rgba(255, 252, 246, 0.95), rgba(255, 241, 212, 0.9));
+  border-color: rgba(245, 158, 11, 0.4);
+  background: linear-gradient(145deg, rgba(255, 253, 245, 0.84), rgba(254, 243, 199, 0.7));
 }
 
 .zone-card.risk-fresh {
-  border-color: rgba(31, 163, 112, 0.34);
-  background: linear-gradient(145deg, rgba(246, 255, 251, 0.95), rgba(227, 250, 241, 0.9));
+  border-color: rgba(16, 185, 129, 0.42);
+  background: linear-gradient(145deg, rgba(246, 255, 251, 0.84), rgba(167, 243, 208, 0.58));
 }
 
 .rescue-list,
@@ -1121,9 +1182,9 @@ button:focus-visible {
   display: inline-grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.32rem;
-  border-radius: 12px;
-  border: 1px solid rgba(107, 149, 184, 0.3);
-  background: rgba(245, 250, 255, 0.94);
+  border-radius: 14px;
+  border: 1px solid rgba(123, 209, 190, 0.54);
+  background: rgba(245, 255, 251, 0.78);
   padding: 0.26rem;
 }
 
@@ -1141,9 +1202,9 @@ button:focus-visible {
 }
 
 .manual-lang-btn.active {
-  border-color: rgba(106, 149, 184, 0.4);
-  background: rgba(255, 255, 255, 0.98);
-  color: #1c587f;
+  border-color: rgba(123, 209, 190, 0.62);
+  background: rgba(255, 255, 255, 0.9);
+  color: #0f766e;
 }
 
 .manual-content {
@@ -1152,9 +1213,9 @@ button:focus-visible {
 }
 
 .manual-card {
-  border-radius: 13px;
-  border: 1px solid rgba(106, 149, 184, 0.28);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(237, 248, 255, 0.9));
+  border-radius: 16px;
+  border: 1px solid rgba(123, 209, 190, 0.54);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(236, 254, 246, 0.72));
   padding: 0.58rem;
 }
 
@@ -1180,17 +1241,17 @@ button:focus-visible {
 }
 
 .library-card {
-  border-radius: 14px;
-  border: 1px solid rgba(108, 149, 184, 0.32);
-  background: rgba(255, 255, 255, 0.94);
+  border-radius: 18px;
+  border: 1px solid rgba(123, 209, 190, 0.56);
+  background: rgba(255, 255, 255, 0.74);
   padding: 0.58rem;
   display: grid;
   gap: 0.38rem;
 }
 
 .library-card.locked {
-  border-color: rgba(93, 167, 125, 0.38);
-  background: linear-gradient(145deg, rgba(246, 255, 250, 0.96), rgba(234, 251, 241, 0.9));
+  border-color: rgba(16, 185, 129, 0.44);
+  background: linear-gradient(145deg, rgba(246, 255, 250, 0.82), rgba(224, 252, 238, 0.76));
 }
 
 .library-head-row {
@@ -1224,9 +1285,9 @@ button:focus-visible {
 }
 
 .library-extra {
-  border-radius: 10px;
-  border: 1px dashed rgba(106, 148, 184, 0.34);
-  background: rgba(244, 251, 255, 0.88);
+  border-radius: 12px;
+  border: 1px dashed rgba(121, 207, 188, 0.58);
+  background: rgba(245, 255, 251, 0.78);
   color: var(--ink-600);
   font-size: 0.75rem;
   padding: 0.26rem 0.42rem;
@@ -1238,8 +1299,8 @@ button:focus-visible {
 
 .rescue-card {
   border-radius: var(--radius-md);
-  border: 1px solid rgba(108, 149, 184, 0.3);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(237, 248, 255, 0.9));
+  border: 1px solid rgba(121, 207, 188, 0.56);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(236, 254, 246, 0.72));
   padding: 0.58rem;
   display: grid;
   gap: 0.42rem;
@@ -1270,18 +1331,18 @@ button:focus-visible {
 }
 
 .severity-critical {
-  color: #8e2e42;
-  background: rgba(190, 62, 86, 0.2);
+  color: #8f2742;
+  background: rgba(220, 81, 116, 0.2);
 }
 
 .severity-rescue {
-  color: #7a560d;
-  background: rgba(183, 129, 20, 0.22);
+  color: #7b5a14;
+  background: rgba(245, 158, 11, 0.24);
 }
 
 .severity-watch {
-  color: #275776;
-  background: rgba(95, 177, 230, 0.2);
+  color: #0f766e;
+  background: rgba(45, 212, 191, 0.2);
 }
 
 .severity-fresh {
@@ -1291,8 +1352,8 @@ button:focus-visible {
 
 .recommend {
   border-radius: var(--radius-sm);
-  border: 1px dashed rgba(109, 149, 183, 0.38);
-  background: rgba(241, 250, 255, 0.9);
+  border: 1px dashed rgba(121, 207, 188, 0.58);
+  background: rgba(242, 255, 250, 0.82);
   color: var(--ink-700);
   font-size: 0.76rem;
   padding: 0.3rem 0.44rem;
@@ -1307,9 +1368,9 @@ button:focus-visible {
 .mini-btn {
   min-height: 40px;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(106, 148, 184, 0.42);
-  background: rgba(255, 255, 255, 0.94);
-  color: #1f5d86;
+  border: 1px solid rgba(121, 207, 188, 0.58);
+  background: rgba(255, 255, 255, 0.74);
+  color: #0f766e;
   font-weight: 800;
   font-size: 0.76rem;
   padding: 0.2rem 0.45rem;
@@ -1329,7 +1390,11 @@ button:focus-visible {
 
 .mini-btn:hover {
   transform: translateY(-1px);
-  background: rgba(232, 246, 255, 0.95);
+  background: rgba(236, 254, 246, 0.86);
+}
+
+.mini-btn:active {
+  transform: scale(0.95);
 }
 
 .mini-btn.danger {
@@ -1357,27 +1422,27 @@ button:focus-visible {
 
 .idea-card {
   border-radius: var(--radius-md);
-  border: 1px solid rgba(108, 148, 183, 0.3);
-  background: linear-gradient(145deg, rgba(246, 252, 255, 0.95), rgba(226, 243, 255, 0.9));
+  border: 1px solid rgba(121, 207, 188, 0.54);
+  background: linear-gradient(145deg, rgba(246, 255, 251, 0.8), rgba(220, 251, 238, 0.72));
   padding: 0.6rem;
 }
 
 .idea-title {
-  color: #1a4e72;
+  color: #065f46;
   font-weight: 800;
   font-size: 0.93rem;
 }
 
 .idea-desc {
   margin-top: 0.24rem;
-  color: #346081;
+  color: #1f7668;
   font-size: 0.81rem;
 }
 
 .item-card {
-  border-radius: 13px;
-  border: 1px solid rgba(108, 149, 184, 0.3);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(236, 248, 255, 0.9));
+  border-radius: 16px;
+  border: 1px solid rgba(121, 207, 188, 0.56);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.74), rgba(236, 254, 246, 0.7));
   padding: 0.58rem;
   display: grid;
   gap: 0.42rem;
@@ -1410,18 +1475,18 @@ button:focus-visible {
 }
 
 .ledger-summary {
-  border-radius: 12px;
-  border: 1px solid rgba(106, 149, 184, 0.33);
-  background: rgba(244, 251, 255, 0.9);
+  border-radius: 14px;
+  border: 1px solid rgba(121, 207, 188, 0.54);
+  background: rgba(245, 255, 251, 0.78);
   color: var(--ink-700);
   font-size: 0.81rem;
   padding: 0.58rem;
 }
 
 .ledger-entry {
-  border-radius: 11px;
-  border: 1px solid rgba(108, 149, 184, 0.28);
-  background: rgba(255, 255, 255, 0.94);
+  border-radius: 14px;
+  border: 1px solid rgba(121, 207, 188, 0.52);
+  background: rgba(255, 255, 255, 0.74);
   padding: 0.5rem;
   display: flex;
   justify-content: space-between;
@@ -1441,9 +1506,9 @@ button:focus-visible {
 }
 
 .empty-state {
-  border-radius: 12px;
-  border: 1px dashed rgba(108, 149, 184, 0.42);
-  background: rgba(248, 252, 255, 0.88);
+  border-radius: 14px;
+  border: 1px dashed rgba(121, 207, 188, 0.64);
+  background: rgba(247, 255, 252, 0.8);
   color: var(--ink-600);
   padding: 0.72rem;
   font-size: 0.84rem;
@@ -1464,7 +1529,9 @@ body.modal-open {
 .modal-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(12, 28, 44, 0.36);
+  background: rgba(6, 78, 59, 0.24);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .modal-stack {
@@ -1477,11 +1544,13 @@ body.modal-open {
 }
 
 .modal-card {
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(102, 145, 181, 0.34);
-  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(121, 207, 188, 0.6);
+  border-radius: 24px;
   box-shadow: var(--shadow-lg);
   padding: 0.85rem;
+  backdrop-filter: blur(40px) saturate(126%);
+  -webkit-backdrop-filter: blur(40px) saturate(126%);
 }
 
 .modal-head {
@@ -1495,10 +1564,10 @@ body.modal-open {
 .modal-close {
   width: 36px;
   height: 36px;
-  border-radius: 10px;
-  border: 1px solid rgba(106, 148, 185, 0.38);
-  background: rgba(255, 255, 255, 0.96);
-  color: #2a618a;
+  border-radius: 12px;
+  border: 1px solid rgba(121, 207, 188, 0.58);
+  background: rgba(255, 255, 255, 0.78);
+  color: #0f766e;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1516,11 +1585,11 @@ body.modal-open {
   left: 50%;
   bottom: 1rem;
   transform: translateX(-50%) translateY(10px);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 0.64rem 0.92rem;
-  background: #112a42;
+  background: rgba(6, 78, 59, 0.92);
   color: #ffffff;
-  box-shadow: 0 16px 32px rgba(14, 44, 73, 0.32);
+  box-shadow: 0 18px 34px rgba(6, 78, 59, 0.34);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--speed-mid) ease, transform var(--speed-mid) ease;
@@ -1540,6 +1609,33 @@ body.modal-open {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes spring-float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(6px);
+  }
+}
+
+@keyframes spring-breath {
+  0% {
+    opacity: 0.5;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(0.98);
   }
 }
 
@@ -1839,7 +1935,7 @@ body.modal-open {
 
 /* Performance Mode Overrides */
 body {
-  background: #f7f9fc !important;
+  background: #f4fbf6 !important;
 }
 
 .bg-halo,
@@ -1882,7 +1978,7 @@ body {
 .item-card,
 .idea-card,
 .ledger-entry {
-  border-color: rgba(92, 116, 146, 0.26) !important;
+  border-color: rgba(96, 158, 143, 0.3) !important;
   background: #ffffff !important;
 }
 
@@ -1900,8 +1996,8 @@ body {
 }
 
 .fridge-stage {
-  background: #f1f5fb !important;
-  border-color: rgba(102, 129, 163, 0.26) !important;
+  background: #ecf8f2 !important;
+  border-color: rgba(98, 163, 147, 0.28) !important;
 }
 
 .fridge-cabinet {

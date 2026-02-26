@@ -230,32 +230,32 @@ const STATUS_LABEL = {
 const FRIDGE_THEME_OPTIONS = [
   {
     id: "arctic",
-    preview: "#9eb4c7",
+    preview: "#7cc5b5",
     labels: { zh: "极地银", en: "Arctic", ja: "アークティック", de: "Arktis", fr: "Arctique", es: "Ártico", it: "Artico" },
   },
   {
     id: "mint",
-    preview: "#71b49d",
+    preview: "#58b894",
     labels: { zh: "薄荷绿", en: "Mint", ja: "ミント", de: "Minze", fr: "Menthe", es: "Menta", it: "Menta" },
   },
   {
     id: "pearl",
-    preview: "#d8dee8",
+    preview: "#c8ddd5",
     labels: { zh: "珍珠白", en: "Pearl", ja: "パール", de: "Perlweiß", fr: "Perle", es: "Perla", it: "Perla" },
   },
   {
     id: "sunset",
-    preview: "#d79f6d",
+    preview: "#d8a873",
     labels: { zh: "暖杏橙", en: "Sunset", ja: "サンセット", de: "Sonnenuntergang", fr: "Coucher de soleil", es: "Atardecer", it: "Tramonto" },
   },
   {
     id: "rose",
-    preview: "#c492a5",
+    preview: "#d39ab6",
     labels: { zh: "雾粉", en: "Rose", ja: "ローズ", de: "Rosa", fr: "Rose", es: "Rosa", it: "Rosa" },
   },
   {
     id: "graphite",
-    preview: "#6f7f90",
+    preview: "#7a948d",
     labels: { zh: "石墨灰", en: "Graphite", ja: "グラファイト", de: "Graphit", fr: "Graphite", es: "Grafito", it: "Grafite" },
   },
 ];
